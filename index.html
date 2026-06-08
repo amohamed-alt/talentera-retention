@@ -398,6 +398,151 @@ a{color:inherit;text-decoration:none}
 @media(max-width:1100px){.tier-card-grid,.owner-tier-line{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.tier-card-grid,.owner-tier-line{grid-template-columns:1fr}}
 
+
+/* Compact 100% viewport fix — no browser zoom needed */
+@media (min-width: 1281px){
+  :root{
+    --side:230px;
+    --r:18px;
+    --r2:14px;
+    --shadow:0 10px 28px rgba(15,23,42,.07);
+    --shadow2:0 2px 10px rgba(15,23,42,.045);
+  }
+  body{font-size:13px;}
+  .sidebar{padding:18px 16px;}
+  .brand{gap:10px;margin-bottom:22px}
+  .logo{width:34px;height:34px;border-radius:12px;font-size:16px}
+  .brand h1{font-size:17px}
+  .brand p{font-size:9px}
+  .nav-title{font-size:9px;margin:14px 0 7px}
+  .nav{gap:4px}
+  .nav-btn{height:34px;border-radius:11px;padding:0 10px;font-size:12px;gap:9px}
+  .nav-ico{width:17px;height:17px;border-radius:5px;font-size:11px}
+  .badge{height:17px;min-width:19px;font-size:9px;padding:1px 5px}
+  .mobile-card{border-radius:16px;padding:13px;margin-top:auto}
+  .mobile-card .mini-logo{width:22px;height:22px;border-radius:8px;margin-bottom:11px}
+  .mobile-card h3{font-size:16px}
+  .mobile-card p{font-size:10px;margin-bottom:12px}
+  .mobile-card button{height:34px;font-size:11px}
+  .user-mini{padding:8px;border-radius:13px;margin-top:12px}
+  .user-av{width:28px;height:28px;border-radius:10px;font-size:11px}
+  .user-mini b{font-size:11px}.user-mini span{font-size:9px}
+
+  .main{padding:14px 18px 20px;}
+  .top{height:58px;border-radius:16px;padding:0 14px;gap:10px;top:8px}
+  .search{height:38px;width:min(430px,34vw);border-radius:13px;padding:0 12px}
+  .search input{font-size:12px}
+  .kbd{font-size:10px;padding:2px 6px}
+  .icon-btn{width:34px;height:34px;border-radius:12px;font-size:14px}
+  .live{height:28px;font-size:10px;padding:0 10px}
+  .refresh{height:34px;border-radius:12px;padding:0 13px;font-size:11px}
+
+  .hero{margin:18px 0 12px}
+  .hero h2{font-size:30px;letter-spacing:-.06em}
+  .hero p{font-size:12px;margin-top:5px}
+  .primary,.outline{height:40px;padding:0 18px;font-size:12px}
+  .tabs{gap:6px;padding-bottom:8px;margin-bottom:10px}
+  .tab{height:30px;padding:0 11px;font-size:11px}
+  .filters{gap:8px;margin-bottom:12px;grid-template-columns:1.25fr repeat(7,minmax(96px,1fr)) auto}
+  .fld{height:36px;border-radius:12px;padding:0 10px}
+  .fld input,.fld select{font-size:11px}
+  .clear{border-radius:12px;font-size:11px;padding:0 12px}
+
+  .grid4,.grid3,.grid2,.ops-grid{gap:10px}
+  .section-gap{height:10px}
+  .section-title{margin:12px 0 8px}
+  .section-title h3{font-size:13px}
+  .section-title p{font-size:10px}
+
+  .stat{min-height:112px;padding:15px;border-radius:18px}
+  .stat h3{font-size:14px}
+  .stat .val{font-size:36px;margin-top:9px}
+  .stat .sub{font-size:10px;margin-top:8px}
+  .go{right:14px;top:14px;width:28px;height:28px;font-size:16px}
+  .pill{font-size:9.5px;padding:2px 6px}
+
+  .card-head{padding:13px 15px 8px}
+  .card-title{font-size:15px}
+  .card-sub{font-size:10px}
+  .chart{height:170px;padding:8px 15px 15px;gap:10px}
+  .bar-stack{height:112px}
+  .bar-label{font-size:10px}
+
+  .ops-kpis{grid-template-columns:repeat(3,1fr);gap:8px;padding:0 12px 12px}
+  .ops-kpi{border-radius:12px;padding:10px}
+  .ops-kpi b{font-size:18px}
+  .ops-kpi span{font-size:8.5px}
+  .ops-kpi small{font-size:9px}
+  .health-bars{gap:8px;padding:0 12px 12px}
+  .health-row .topline{font-size:10.5px;margin-bottom:4px}
+  .health-row .track{height:7px}
+
+  .project-list{padding:0 13px 12px;gap:8px}
+  .project-item{grid-template-columns:26px 1fr auto;gap:8px;padding:3px 0}
+  .project-ico{width:24px;height:24px;border-radius:8px;font-size:13px}
+  .project-item b{font-size:11px}
+  .project-item span{font-size:9px}
+
+  .table-wrap{max-height:340px}
+  .tbl{font-size:11px}
+  .tbl th{font-size:8.5px;padding:9px 12px}
+  .tbl td{padding:9px 12px}
+  .avatar{width:28px;height:28px;border-radius:10px;font-size:11px}
+  .owner-row{gap:8px}
+  .owner-row b{font-size:11px}.owner-row span{font-size:9px}
+  .small-list{padding:0 13px 10px}
+  .small-row{padding:9px 0}
+  .small-row b{font-size:11px}
+  .small-row span{font-size:9px}
+  .more{height:32px;font-size:11px}
+
+  .donut{width:145px;height:145px;margin:0 auto 8px}
+  .donut:after{width:86px;height:86px}
+  .donut-in b{font-size:30px}
+  .donut-in span{font-size:11px}
+  .legend{font-size:10px;gap:10px}
+
+  .month-list{gap:6px;padding:0 12px 12px}
+  .month-row{grid-template-columns:70px 1fr auto;gap:8px;padding:8px;border-radius:12px}
+  .month-row b{font-size:10.5px}
+  .month-row small{font-size:9px}
+  .month-row .line{height:6px}
+
+  .tier-card-grid,.owner-tier-line{gap:8px}
+  .tier-card{border-radius:13px;padding:10px;min-height:80px}
+  .tier-card h4{font-size:11px}
+  .tier-card .big{font-size:22px}
+  .tier-card .meta{font-size:8.5px;gap:4px}
+
+  .owner-ops-grid{grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0}
+  .owner-mini{border-radius:14px;padding:11px}
+  .owner-mini b{font-size:20px}
+  .owner-mini span{font-size:8.5px}
+  .profile{padding:15px;border-radius:18px;margin-bottom:12px}
+  .profile .avatar{width:48px;height:48px;border-radius:16px;font-size:18px}
+  .profile h3{font-size:19px}
+  .profile p{font-size:11px}
+  .profile-stats{gap:16px}
+  .profile-stats b{font-size:18px}
+  .profile-stats span{font-size:8.5px}
+}
+
+/* Wider, flatter desktop layout */
+@media (min-width: 1600px){
+  .ops-grid{grid-template-columns:1.15fr 1fr .8fr}
+  .table-wrap{max-height:320px}
+  #panel-dashboard > .grid2:nth-of-type(2){grid-template-columns:1.15fr .85fr}
+}
+
+@media (max-width: 1500px) and (min-width:1281px){
+  :root{--side:205px}
+  .main{padding:12px 14px 18px}
+  .filters{grid-template-columns:repeat(4,minmax(0,1fr));}
+  .grid4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .stat .val{font-size:32px}
+  .hero h2{font-size:28px}
+}
+
 </style>
 </head>
 <body>
@@ -709,7 +854,9 @@ function statusText(row){
 }
 function filteredAccounts(extraOwner){
   const f = filters();
-  const owner = extraOwner || f.owner || CURRENT_OWNER || '';
+  // Important: only apply CURRENT_OWNER while viewing an owner tab.
+  // Dashboard/Financial tabs must always use the filter controls only.
+  const owner = extraOwner || f.owner || (CURRENT_TAB === 'owner' ? CURRENT_OWNER : '') || '';
   return accounts().filter(r => {
     const hay = [
       r.clientName,r.gid,r.cleanGid,r.rm,r.csm,r.product,r.location,r.status,r.financialStatus,
@@ -719,9 +866,9 @@ function filteredAccounts(extraOwner){
       roleMatch(r, f.role) &&
       ownerMatch(r, owner) &&
       monthMatch(r, f.month, f.monthField) &&
-      (!f.product || r.product === f.product) &&
-      (!f.status || statusText(r) === f.status || r.financialStatus === f.status || r.accountStatusForFilter === f.status) &&
-      (!f.location || r.location === f.location);
+      (!f.product || norm(r.product) === norm(f.product)) &&
+      (!f.status || norm(statusText(r)) === norm(f.status) || norm(r.financialStatus) === norm(f.status) || norm(r.accountStatusForFilter) === norm(f.status)) &&
+      (!f.location || norm(r.location) === norm(f.location));
   });
 }
 function metricRows(kind, baseRows){
@@ -738,14 +885,15 @@ function metricRows(kind, baseRows){
   if(kind === 'sheetonly') return rows.filter(r => r.notInBudget2026);
   return rows;
 }
-function pendingRows(){return metricRows('remaining').sort((a,b)=>num(b.remainingCollection)-num(a.remainingCollection))}
-function collectedRows(){return metricRows('cash').sort((a,b)=>num(b.collectedValue)-num(a.collectedValue))}
+function pendingRows(baseRows){return metricRows('remaining', baseRows || filteredAccounts()).sort((a,b)=>num(b.remainingCollection)-num(a.remainingCollection))}
+function collectedRows(baseRows){return metricRows('cash', baseRows || filteredAccounts()).sort((a,b)=>num(b.collectedValue)-num(a.collectedValue))}
 function priorityRows(){
   const rows = filteredAccounts();
+  const delayed = metricRows('delayed', rows);
   return [
-    ...metricRows('delayed', rows),
-    ...pendingRows().filter(r => !metricRows('delayed', rows).includes(r)),
-    ...metricRows('noaction', rows).filter(r => !metricRows('delayed', rows).includes(r))
+    ...delayed,
+    ...pendingRows(rows).filter(r => !delayed.includes(r)),
+    ...metricRows('noaction', rows).filter(r => !delayed.includes(r))
   ];
 }
 function rowsStats(rows){
@@ -908,10 +1056,18 @@ function renderActions(rows){
   $('riskText').textContent = delayed.length ? `${money(sum(delayed,'renewalValue2026'))} renewal value needs attention.` : `${money(sum(remaining,'remainingCollection'))} booked not cash still pending.`;
 }
 
-function ownerRowsFor(ownerName, rows){return rows.filter(r => ownerMatch(r, ownerName))}
+function ownerRowsFor(ownerName, rows){return (rows || filteredAccounts()).filter(r => ownerMatch(r, ownerName))}
 function buildOwnerSummary(role, rows){
-  const owners = getOwners().filter(o => o.role === role);
-  return owners.map(o => {
+  rows = rows || filteredAccounts();
+  const baseOwners = getOwners().filter(o => o.role === role);
+  const dynamicNames = unique(rows.map(r => role === 'RM' ? (r.rm || '') : (r.csm || '')));
+  const map = new Map();
+  baseOwners.forEach(o => map.set(norm(o.name), o));
+  dynamicNames.forEach(name => {
+    if(!name) return;
+    if(!map.has(norm(name))) map.set(norm(name), {name, role, count:0, color:ownerColor(name, role)});
+  });
+  return [...map.values()].map(o => {
     const rs = ownerRowsFor(o.name, rows);
     const st = rowsStats(rs);
     return { ...o, rows:rs, ...st };
@@ -919,20 +1075,23 @@ function buildOwnerSummary(role, rows){
 }
 function renderOwnerSummary(){
   const rows = filteredAccounts();
+  window.__ownerRows = {};
   const render = (role, bodyId, countId) => {
     const os = buildOwnerSummary(role, rows);
+    os.forEach(o => window.__ownerRows[`${role}:${o.name}`] = o.rows);
     $(countId).textContent = os.length + ' owners';
-    $(bodyId).innerHTML = os.map(o => `
-      <tr onclick="openRows('${esc(shortOwner(o.name))} Accounts', window.__ownerRows['${role}:${esc(o.name)}'], 'sheet')">
+    $(bodyId).innerHTML = os.map(o => {
+      const key = `${role}:${o.name}`;
+      return `
+      <tr onclick="openRows('${esc(shortOwner(o.name))} Accounts', window.__ownerRows['${esc(key)}'], 'sheet')">
         <td><div class="owner-row"><div class="avatar" style="background:${esc(o.color)}">${esc(shortOwner(o.name)[0])}</div><div><b>${esc(shortOwner(o.name))}</b><span>${esc(role)} · ${o.count} accounts</span></div></div></td>
         <td class="num">${money(o.budget)}</td>
         <td class="num">${money(o.booking)}</td>
         <td class="num">${money(o.cash)}</td>
         <td class="num">${money(o.remaining)}</td>
         <td class="center"><span class="pill ${o.delayed?'red':'green'}">${o.delayed}</span></td>
-      </tr>`).join('');
-    window.__ownerRows = window.__ownerRows || {};
-    os.forEach(o => window.__ownerRows[`${role}:${o.name}`] = o.rows);
+      </tr>`;
+    }).join('');
   };
   render('RM','rmSummaryBody','rmSummaryCount');
   render('CSM','csmSummaryBody','csmSummaryCount');
@@ -948,6 +1107,7 @@ function renderCollab(){
     </div>`).join('');
 }
 function renderProgress(rows){
+  rows = rows || filteredAccounts();
   const booking = sum(rows,'bookingSheetValue');
   const cash = sum(rows,'collectedValue');
   const pct = booking > 0 ? Math.min(100, Math.round(cash / booking * 100)) : 0;
@@ -956,8 +1116,9 @@ function renderProgress(rows){
 }
 
 function renderFinancialLists(rows){
-  const pending = pendingRows();
-  const collected = collectedRows();
+  rows = rows || filteredAccounts();
+  const pending = pendingRows(rows);
+  const collected = collectedRows(rows);
   $('pendingBadge').textContent = pending.length + ' · ' + money(sum(pending,'remainingCollection'));
   $('collectedBadge').textContent = collected.length + ' · ' + money(sum(collected,'collectedValue'));
   $('pendingList').innerHTML = smallRows(pending, 'remainingCollection', 7);
@@ -1377,17 +1538,33 @@ function renderOwnerTierBreakdown(owner){
 }
 
 function renderFinancialStats(targetId, rows){
+  rows = rows || filteredAccounts();
   const st = rowsStats(rows);
+  const prefix = String(targetId || 'financial').replace(/[^a-zA-Z0-9_]/g,'_');
+  const keys = {
+    budget: prefix + '_budget',
+    booking: prefix + '_booking',
+    cash: prefix + '_cash',
+    remaining: prefix + '_remaining',
+    delayed: prefix + '_delayed',
+    upcoming: prefix + '_upcoming',
+    late: prefix + '_late',
+    noaction: prefix + '_noaction'
+  };
   window.__rows = window.__rows || {};
-  Object.assign(window.__rows, {
-    budget: metricRows('budget', rows), booking: metricRows('booking', rows), cash: metricRows('cash', rows), remaining: metricRows('remaining', rows),
-    delayed: metricRows('delayed', rows), upcoming: metricRows('upcoming', rows), late: metricRows('late', rows), noaction: metricRows('noaction', rows)
-  });
+  window.__rows[keys.budget] = metricRows('budget', rows);
+  window.__rows[keys.booking] = metricRows('booking', rows);
+  window.__rows[keys.cash] = metricRows('cash', rows);
+  window.__rows[keys.remaining] = metricRows('remaining', rows);
+  window.__rows[keys.delayed] = metricRows('delayed', rows);
+  window.__rows[keys.upcoming] = metricRows('upcoming', rows);
+  window.__rows[keys.late] = metricRows('late', rows);
+  window.__rows[keys.noaction] = metricRows('noaction', rows);
   $(targetId).innerHTML = [
-    statCard('Budget Value', money(st.budget), 'renewal value', window.__rows.budget, 'budget', true, 'green'),
-    statCard('Booking Sheet', money(st.booking), 'booked from sheet', window.__rows.booking, 'booking', false, 'amber'),
-    statCard('Cash Collected', money(st.cash), 'collection sheet', window.__rows.cash, 'cash', false, 'blue'),
-    statCard('Booked Not Cash', money(st.remaining), 'remaining collection', window.__rows.remaining, 'remaining', false, 'red')
+    statCard('Budget Value', money(st.budget), `${window.__rows[keys.budget].length} rows · renewal value`, window.__rows[keys.budget], keys.budget, true, 'green'),
+    statCard('Booking Sheet', money(st.booking), `${window.__rows[keys.booking].length} rows · booked from sheet`, window.__rows[keys.booking], keys.booking, false, 'amber'),
+    statCard('Cash Collected', money(st.cash), `${window.__rows[keys.cash].length} rows · collection sheet`, window.__rows[keys.cash], keys.cash, false, 'blue'),
+    statCard('Booked Not Cash', money(st.remaining), `${window.__rows[keys.remaining].length} rows · remaining collection`, window.__rows[keys.remaining], keys.remaining, false, 'red')
   ].join('');
 }
 
