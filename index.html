@@ -1,142 +1,1048 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Talentera · Retention Command Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Talentera · Retention Dashboard</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --sb-w:220px;--bg:#f6f8f6;--card:rgba(255,255,255,.72);--card2:rgba(255,255,255,.88);--border:rgba(214,228,217,.78);--border2:#dce5dd;
-  --text:#0e1a11;--text2:#3a4f3d;--muted:#7a8f7d;--muted2:#a8b8aa;
-  --green:#16a34a;--green-dk:#0d7a38;--green-bg:#f0faf3;--green-bd:#bbdfc8;
-  --red:#dc2626;--red-bg:#fff5f5;--red-bd:#fecaca;--amber:#c27803;--amber-bg:#fffbeb;--amber-bd:#fde68a;
-  --blue:#1d4ed8;--blue-bg:#eff6ff;--blue-bd:#bfdbfe;--cyan:#0e7490;--cyan-bg:#ecfeff;--cyan-bd:#a5f3fc;
-  --purple:#7c3aed;--purple-bg:#faf5ff;--purple-bd:#e9d5ff;--r:14px;--r-sm:8px;
-  --sh:0 1px 3px rgba(0,0,0,.05),0 1px 2px rgba(0,0,0,.04);--sh2:0 10px 30px rgba(15,26,17,.08);
-  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;--mono:'SF Mono','Fira Code',monospace;
+  --green:#0f7a45;
+  --green2:#0b5e35;
+  --green3:#e7f6ed;
+  --greenbg:#eefaf3;
+  --mint:#f1faf5;
+  --ink:#0e1712;
+  --ink2:#34433a;
+  --muted:#7d8d83;
+  --line:#e7eee9;
+  --soft:#f7faf8;
+  --white:#fff;
+  --red:#dc2626;
+  --redbg:#fff1f2;
+  --amber:#c77700;
+  --amberbg:#fff8e5;
+  --blue:#2563eb;
+  --bluebg:#eef4ff;
+  --purple:#7c3aed;
+  --purplebg:#f5efff;
+  --teal:#0e7490;
+  --tealbg:#eafcff;
+  --shadow:0 16px 40px rgba(15,23,42,.08);
+  --shadow2:0 4px 14px rgba(15,23,42,.055);
+  --r:26px;
+  --r2:18px;
+  --side:282px;
+  --font:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",system-ui,sans-serif;
+  --mono:"SF Mono","Cascadia Code",Consolas,monospace;
 }
-*{font-family:var(--font)}
-body{background:radial-gradient(circle at 15% 4%,rgba(187,247,208,.55),transparent 30%),radial-gradient(circle at 95% 20%,rgba(165,243,252,.52),transparent 32%),radial-gradient(circle at 80% 92%,rgba(253,230,138,.54),transparent 35%),linear-gradient(135deg,#ecfdf5 0%,#f8fafc 50%,#eff6ff 100%);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.5;min-height:100vh}
-::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
-.app{display:flex;min-height:100vh}.sidebar{width:var(--sb-w);position:fixed;inset:0 auto 0 0;z-index:200;display:flex;flex-direction:column;overflow-y:auto;background:linear-gradient(180deg,rgba(255,255,255,.62),rgba(240,253,244,.46));border-right:1px solid rgba(255,255,255,.72);box-shadow:14px 0 50px rgba(15,23,42,.06);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}.main{margin-left:var(--sb-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
-.sb-head{padding:20px 16px 14px;display:flex;align-items:center;gap:10px}.sb-logo{width:32px;height:32px;border-radius:9px;background:var(--green);display:grid;place-items:center;color:#fff;font-weight:800;font-size:14px;box-shadow:0 8px 20px rgba(22,163,74,.22)}.sb-name{font-size:14px;font-weight:800;color:var(--text)}.sb-tag{font-size:9px;color:var(--muted);margin-top:1px}.sb-sep{height:1px;background:rgba(15,26,17,.07);margin:0 14px}.sb-grp{padding:14px 14px 2px;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2)}.sbi{display:flex;align-items:center;gap:9px;padding:8px 10px;margin:1px 6px;border-radius:10px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:600;border:none;background:transparent;width:calc(100% - 12px);text-align:left;transition:.12s;text-decoration:none}.sbi:hover{background:rgba(255,255,255,.62);color:var(--green);transform:translateX(1px)}.sbi.active{background:rgba(22,163,74,.12);color:var(--green);font-weight:800;box-shadow:inset 0 0 0 1px rgba(22,163,74,.12)}.sbi-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;background:var(--muted2)}.sbi.active .sbi-dot{background:var(--green)}.sb-badge{margin-left:auto;font-size:9px;font-weight:800;padding:1px 6px;border-radius:20px;background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}.sb-ext{margin-left:auto;font-size:10px;opacity:.45}.sb-bot{margin-top:auto;border-top:1px solid rgba(15,26,17,.07);padding:10px 8px}.sb-user{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.65)}.sb-av{width:30px;height:30px;border-radius:8px;background:var(--green);display:grid;place-items:center;color:#fff;font-size:11px;font-weight:800}.sb-uname{font-size:12px;font-weight:800;color:var(--text)}.sb-urole{font-size:10px;color:var(--muted)}
-.topbar{background:rgba(255,255,255,.56);border-bottom:1px solid rgba(255,255,255,.68);padding:0 28px;height:60px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}.tb-greet{font-size:18px;font-weight:800;letter-spacing:-.025em}.tb-sub{font-size:11px;color:var(--muted);margin-top:1px}.tb-r{margin-left:auto;display:flex;align-items:center;gap:8px}.tb-chip{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:10px;font-size:11px;font-weight:700;background:rgba(255,255,255,.66);border:1px solid var(--border);color:var(--text2)}.live-pill{background:var(--green-bg);color:var(--green);border-color:var(--green-bd);display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;font-size:10px;font-weight:800;border:1px solid}.live-d{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.28}}.ref-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;background:var(--green);color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;transition:.12s;box-shadow:0 10px 20px rgba(22,163,74,.18)}.ref-btn:hover{background:var(--green-dk)}.spin-i{animation:spin .8s linear infinite;display:inline-block}@keyframes spin{to{transform:rotate(360deg)}}
-.tabs{background:rgba(255,255,255,.52);border-bottom:1px solid rgba(255,255,255,.68);padding:0 28px;display:flex;overflow-x:auto;scrollbar-width:none;position:sticky;top:60px;z-index:99;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}.tabs::-webkit-scrollbar{display:none}.tb{padding:0 14px;height:44px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;transition:.12s;background:none;border-top:none;border-left:none;border-right:none;display:flex;align-items:center;gap:6px}.tb:hover{color:var(--text2)}.tb.on{color:var(--green);border-bottom-color:var(--green);font-weight:800}.tb-chip2{background:var(--red-bg);color:var(--red);font-size:8px;font-weight:800;padding:1px 5px;border-radius:4px;border:1px solid var(--red-bd)}
-.page{padding:24px 28px 60px}.pnl{display:none;animation:fi .2s ease}.pnl.on{display:block}@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}.card{background:var(--card);border:1px solid rgba(255,255,255,.72);border-radius:var(--r);box-shadow:var(--sh);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);overflow:hidden}.card:hover{box-shadow:var(--sh2);transition:box-shadow .15s}.ch{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px}.ct{font-size:11.5px;font-weight:800;color:var(--text2);display:flex;align-items:center;gap:7px;text-transform:uppercase;letter-spacing:.04em}.ci{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:12px;flex-shrink:0}.b{display:inline-flex;align-items:center;font-size:10px;font-weight:800;border-radius:999px;padding:3px 8px;white-space:nowrap;gap:4px}.bg{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}.br{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}.ba{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd)}.bb{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd)}.bc{background:var(--cyan-bg);color:var(--cyan);border:1px solid var(--cyan-bd)}.bp{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bd)}
-.filter-bar{background:rgba(255,255,255,.56);border:1px solid rgba(255,255,255,.76);border-radius:var(--r);padding:12px;display:grid;grid-template-columns:repeat(6,minmax(130px,1fr)) auto;gap:10px;margin-bottom:18px;backdrop-filter:blur(16px)}.flt{display:flex;flex-direction:column;gap:4px}.flt label{font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}.flt select{height:34px;border:1px solid var(--border);background:rgba(255,255,255,.76);border-radius:9px;padding:0 9px;font-size:12px;color:var(--text2);font-weight:700;outline:none}.clear-btn{align-self:end;height:34px;border:1px solid var(--green-bd);background:var(--green-bg);color:var(--green);border-radius:9px;padding:0 12px;font-size:11px;font-weight:800;cursor:pointer}
-.krow{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}.kc{background:var(--card2);border:1px solid rgba(255,255,255,.72);border-radius:var(--r);box-shadow:var(--sh);padding:20px;transition:.15s;overflow:hidden;position:relative;cursor:pointer}.kc:hover{box-shadow:var(--sh2);transform:translateY(-2px)}.kc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}.kc-lbl{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.kc-ico{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:16px}.kc-val{font-size:34px;font-weight:900;line-height:1;letter-spacing:-.05em;color:var(--text);margin-bottom:6px}.kc-sub{font-size:11.5px;color:var(--muted);font-weight:600}.kc-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--border)}.kc-barf{height:100%;transition:width .8s}.fs{background:linear-gradient(135deg,#0f766e,#15803d);border-radius:var(--r);padding:18px 22px;margin-bottom:20px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;box-shadow:0 18px 35px rgba(15,118,110,.18)}.fs-pills{display:flex;gap:10px;flex-wrap:wrap}.fp{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);border-radius:11px;padding:12px 16px;cursor:pointer;transition:.12s;min-width:126px}.fp:hover{background:rgba(255,255,255,.23);transform:translateY(-1px)}.fp-v{font-family:var(--mono);font-size:26px;font-weight:900;color:#fff;line-height:1}.fp-l{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.66);margin-top:5px}.fs-ai{max-width:340px;text-align:right}.fs-ai-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.5);margin-bottom:6px}.fs-ai-txt{font-size:12.5px;color:rgba(255,255,255,.9);line-height:1.55}
-.g2{display:grid;grid-template-columns:1.7fr 1fr;gap:16px;margin-bottom:20px}.g2e{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}.mb{margin-bottom:20px}.cw{padding:14px 20px 16px;height:240px}.cw canvas{width:100%!important;height:100%!important}.tbl{width:100%;border-collapse:collapse}.tbl th{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding:10px 16px;text-align:left;border-bottom:1px solid var(--border);background:rgba(255,255,255,.44)}.tbl td{padding:11px 16px;border-bottom:1px solid var(--border);font-size:12.5px;color:var(--text2);vertical-align:middle}.tbl tr:last-child td{border-bottom:none}.tbl tr:hover td{background:rgba(240,250,243,.72)}.tbl .c{text-align:center}.tbl .r{text-align:right}.m{font-family:var(--mono);font-weight:800;color:var(--text)}.tw{overflow-x:auto}.sp{display:inline-flex;align-items:center;font-size:10px;font-weight:800;padding:3px 9px;border-radius:999px;white-space:nowrap}.sw{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}.sl{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}.so{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd)}.sa{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd)}.sc{background:var(--cyan-bg);color:var(--cyan);border:1px solid var(--cyan-bd)}.more{width:100%;padding:10px;text-align:center;font-size:11.5px;font-weight:800;color:var(--green);border:none;border-top:1px solid var(--border);background:rgba(255,255,255,.5);cursor:pointer;transition:.12s}.more:hover{background:var(--green-bg)}.dr{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--border);transition:.1s}.dr:last-child{border-bottom:none}.dr:hover{background:rgba(240,250,243,.72)}.dn2{font-weight:800;font-size:12.5px;color:var(--text)}.dm{font-size:10.5px;color:var(--muted);margin-top:1px}.da{font-family:var(--mono);font-size:12.5px;font-weight:900;min-width:70px;text-align:right}.rl{color:inherit;text-decoration:none;font-weight:800}.rl:hover{color:var(--green);text-decoration:underline}.rl::after{content:" ↗";font-size:8px;opacity:.42}.lbl{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:var(--text2);margin:22px 0 12px}.lbl::after{content:"";flex:1;height:1px;background:var(--border)}
-.mstrip{display:grid;grid-template-columns:repeat(8,1fr);gap:1px;background:var(--border)}.mk{background:rgba(255,255,255,.68);padding:14px 10px;text-align:center;cursor:pointer}.mk:hover{background:var(--green-bg)}.mk-v{font-family:var(--mono);font-size:19px;font-weight:900;line-height:1}.mk-l{font-size:8.5px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:5px}.pg{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}.pc{background:var(--card);border:1px solid rgba(255,255,255,.72);border-radius:var(--r);overflow:hidden;transition:.15s}.pc:hover{box-shadow:var(--sh2)}.pc-h{padding:12px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.44);display:flex;align-items:center;justify-content:space-between}.pd{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:9px 14px;border-bottom:1px solid var(--border)}.pd:last-child{border-bottom:none}.pd-n{font-size:11.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}.pd-s{font-size:9.5px;color:var(--muted);margin-top:1px}.rh{background:var(--card2);border:1px solid rgba(255,255,255,.72);border-radius:var(--r);padding:20px;display:flex;align-items:center;gap:18px;margin-bottom:16px;border-left:4px solid var(--hc,var(--green));box-shadow:var(--sh)}.rh-av{width:50px;height:50px;border-radius:13px;display:grid;place-items:center;font-size:21px;font-weight:900;flex-shrink:0}.rh-st{display:flex;gap:22px;margin-left:auto;flex-wrap:wrap}.rh-sv{font-family:var(--mono);font-size:22px;font-weight:900;line-height:1}.rh-sl{font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-top:4px}.tier-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.tier-card{background:rgba(255,255,255,.66);border:1px solid var(--border);border-radius:12px;padding:13px 14px;cursor:pointer}.tier-v{font-family:var(--mono);font-size:23px;font-weight:900}.tier-l{font-size:9px;font-weight:800;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:5px}.action-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:14px}.mini-card{background:rgba(255,255,255,.62);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer}.mini-v{font-family:var(--mono);font-size:22px;font-weight:900}.mini-l{font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:800;margin-top:4px}
-.mbg{position:fixed;inset:0;background:rgba(15,23,42,.22);z-index:9999;display:none;align-items:flex-start;justify-content:center;padding:60px 20px;overflow:auto}.mbg.on{display:flex}.mc2{width:min(1120px,calc(100vw - 40px));max-height:calc(100vh - 90px);background:rgba(255,255,255,.86);border:1px solid rgba(255,255,255,.74);border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.16);overflow:hidden;animation:fi .15s ease;backdrop-filter:blur(22px)}.mh{padding:14px 20px;background:rgba(246,248,246,.72);border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between}.mh-t{font-size:15px;font-weight:900}.mc-close{width:28px;height:28px;border-radius:8px;background:var(--border);border:none;cursor:pointer;font-size:15px;color:var(--muted);display:grid;place-items:center;transition:.12s}.mc-close:hover{background:var(--red-bg);color:var(--red)}.mb2{max-height:calc(100vh - 170px);overflow:auto}.mr{display:grid;grid-template-columns:minmax(240px,1.7fr) minmax(130px,.7fr) minmax(120px,.55fr) minmax(120px,.55fr) minmax(90px,.45fr);gap:8px;padding:10px 20px;border-bottom:1px solid var(--border);align-items:center;font-size:12.5px;transition:.1s}.mr:hover{background:var(--green-bg)}.mn2{font-weight:800}.mm2{font-size:10px;color:var(--muted);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.me{padding:28px;text-align:center;color:var(--muted);font-size:13px;font-style:italic}.ls{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:65vh;gap:14px}.spin2{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite}.lt{font-size:13px;font-weight:800;color:var(--muted)}
-@media(max-width:1380px){.mstrip{grid-template-columns:repeat(4,1fr)}.pg{grid-template-columns:repeat(3,1fr)}.filter-bar{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:1100px){.krow,.g2,.g2e,.g3{grid-template-columns:1fr}.pg{grid-template-columns:1fr 1fr}.tier-grid{grid-template-columns:repeat(2,1fr)}.action-row{grid-template-columns:1fr}.fs{grid-template-columns:1fr}.fs-ai{text-align:left}}
-@media(max-width:780px){:root{--sb-w:0px}.sidebar{display:none}.page{padding:16px 16px 60px}.mstrip{grid-template-columns:repeat(2,1fr)}.pg,.tier-grid{grid-template-columns:1fr}.rh-st{display:none}.filter-bar{grid-template-columns:1fr}.mr{grid-template-columns:1fr}.fs-ai{display:none}}
+body{
+  min-height:100vh;
+  font-family:var(--font);
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 10% 10%,rgba(15,122,69,.09),transparent 26%),
+    radial-gradient(circle at 90% 0%,rgba(14,116,144,.08),transparent 30%),
+    linear-gradient(135deg,#f6f8f7,#eef5f1);
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select{font-family:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.shell{
+  width:min(1720px,calc(100vw - 52px));
+  margin:40px auto;
+  min-height:calc(100vh - 80px);
+  background:rgba(255,255,255,.78);
+  border:1px solid rgba(255,255,255,.8);
+  box-shadow:0 24px 70px rgba(15,23,42,.11);
+  border-radius:34px;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:var(--side) 1fr;
+  backdrop-filter:blur(18px);
+}
+.sidebar{
+  background:rgba(250,252,250,.78);
+  border-right:1px solid var(--line);
+  padding:28px 22px;
+  display:flex;
+  flex-direction:column;
+  min-height:calc(100vh - 80px);
+}
+.brand{display:flex;align-items:center;gap:14px;margin-bottom:34px}
+.logo{
+  width:44px;height:44px;border-radius:16px;background:linear-gradient(135deg,var(--green),#17a466);
+  color:#fff;display:grid;place-items:center;font-weight:900;font-size:20px;
+  box-shadow:0 12px 24px rgba(15,122,69,.18);
+}
+.brand h1{font-size:21px;line-height:1;font-weight:900;letter-spacing:-.04em}
+.brand p{font-size:11px;color:var(--muted);margin-top:4px;font-weight:650}
+.nav-title{
+  color:#96a39a;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:900;margin:18px 0 10px;
+}
+.nav{display:grid;gap:6px}
+.nav-btn{
+  width:100%;height:48px;border:0;background:transparent;border-radius:16px;color:#65736a;
+  display:flex;align-items:center;gap:12px;padding:0 14px;font-size:15px;font-weight:760;text-align:left;transition:.15s;
+}
+.nav-btn:hover{background:#fff;color:var(--green);transform:translateX(2px)}
+.nav-btn.active{background:#e4f6eb;color:var(--green);box-shadow:inset 4px 0 0 var(--green)}
+.nav-ico{
+  width:22px;height:22px;border-radius:7px;display:grid;place-items:center;color:currentColor;
+}
+.badge{
+  margin-left:auto;
+  min-width:24px;
+  padding:2px 7px;
+  height:21px;
+  border-radius:99px;
+  background:#fef2f2;
+  color:var(--red);
+  border:1px solid #fecaca;
+  font-size:11px;
+  display:grid;
+  place-items:center;
+  font-weight:900;
+}
+.ext{margin-left:auto;font-size:13px;opacity:.55}
+.mobile-card{
+  margin-top:auto;
+  border-radius:22px;
+  padding:18px;
+  color:#fff;
+  background:
+    radial-gradient(circle at 82% 20%,rgba(255,255,255,.13),transparent 22%),
+    linear-gradient(145deg,#03150d,#0f5f38 80%);
+  box-shadow:0 16px 36px rgba(2,40,22,.12);
+}
+.mobile-card .mini-logo{width:28px;height:28px;border-radius:10px;background:rgba(255,255,255,.16);display:grid;place-items:center;margin-bottom:18px}
+.mobile-card h3{font-size:22px;line-height:1.06;margin-bottom:8px;letter-spacing:-.04em}
+.mobile-card p{font-size:12px;opacity:.74;margin-bottom:18px}
+.mobile-card button{border:0;border-radius:999px;background:#159257;color:#fff;width:100%;height:44px;font-weight:850}
+.user-mini{display:flex;align-items:center;gap:10px;margin-top:18px;padding:12px;background:#fff;border-radius:18px;border:1px solid var(--line)}
+.user-av{width:38px;height:38px;border-radius:14px;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:900}
+.user-mini b{font-size:13px}.user-mini span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.main{
+  min-width:0;
+  padding:26px 30px 34px;
+  background:rgba(250,252,250,.62);
+}
+.top{
+  height:86px;
+  background:rgba(255,255,255,.78);
+  border:1px solid var(--line);
+  border-radius:26px;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  padding:0 22px;
+  box-shadow:var(--shadow2);
+  position:sticky;
+  top:18px;
+  z-index:20;
+  backdrop-filter:blur(18px);
+}
+.search{
+  width:min(520px,45vw);
+  height:52px;
+  background:#f8faf9;
+  border:1px solid var(--line);
+  border-radius:20px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:0 16px;
+}
+.search input{border:0;background:transparent;outline:0;width:100%;font-size:15px;color:var(--ink2);font-weight:650}
+.kbd{font-size:12px;border:1px solid #d9e4dc;background:#fff;border-radius:8px;padding:3px 8px;color:#7b897f;font-weight:850}
+.top-spacer{flex:1}
+.icon-btn{
+  width:48px;height:48px;border:0;background:#fff;border-radius:18px;border:1px solid var(--line);
+  display:grid;place-items:center;font-size:19px;color:var(--ink2);
+}
+.live{
+  height:38px;border-radius:999px;border:1px solid #b8e5c8;background:#eefaf3;color:var(--green);
+  display:flex;align-items:center;gap:8px;padding:0 14px;font-size:12px;font-weight:900;white-space:nowrap;
+}
+.live:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(15,122,69,.1)}
+.refresh{
+  height:46px;border:0;border-radius:16px;padding:0 18px;background:var(--green);color:#fff;font-weight:900;
+  box-shadow:0 12px 28px rgba(15,122,69,.18);
+}
+.hero{
+  margin:30px 0 22px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+}
+.hero h2{font-size:46px;letter-spacing:-.07em;line-height:1;font-weight:950}
+.hero p{color:var(--muted);font-size:16px;margin-top:10px;font-weight:620}
+.hero-actions{display:flex;gap:12px;align-items:center}
+.primary,.outline{
+  height:58px;border-radius:999px;padding:0 28px;font-size:16px;font-weight:900;
+  display:flex;align-items:center;gap:10px;
+}
+.primary{border:0;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;box-shadow:0 15px 30px rgba(15,122,69,.2)}
+.outline{background:#fff;border:1.5px solid #173b29;color:#173b29}
+.tabs{
+  display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;margin-bottom:16px;
+}
+.tab{
+  height:40px;padding:0 14px;border:0;border-radius:999px;background:transparent;color:#738177;
+  font-size:13px;font-weight:850;white-space:nowrap;
+}
+.tab.active{background:#e6f6ec;color:var(--green)}
+.filters{
+  display:grid;
+  grid-template-columns:1.5fr repeat(7,minmax(110px,1fr)) auto;
+  gap:10px;
+  margin:0 0 18px;
+}
+.fld{height:46px;background:#fff;border:1px solid var(--line);border-radius:16px;display:flex;align-items:center;padding:0 13px;gap:8px}
+.fld input,.fld select{width:100%;border:0;background:transparent;outline:0;font-weight:750;color:var(--ink2);font-size:13px}
+.clear{border:0;border-radius:16px;background:#e7f6ed;color:var(--green);font-weight:900;padding:0 16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.grid3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  box-shadow:var(--shadow2);
+  overflow:hidden;
+}
+.card.pad{padding:22px}
+.stat{
+  min-height:182px;
+  padding:22px;
+  position:relative;
+  cursor:pointer;
+  transition:.15s ease;
+}
+.stat:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.stat.dark{
+  background:
+    radial-gradient(circle at 92% 28%,rgba(255,255,255,.18),transparent 30%),
+    linear-gradient(145deg,#0e7a45,#0a4b2d);
+  color:#fff;
+}
+.stat h3{font-size:18px;font-weight:850;letter-spacing:-.02em}
+.stat .val{font-size:56px;font-weight:950;letter-spacing:-.08em;line-height:.98;margin-top:18px}
+.stat .sub{display:flex;align-items:center;gap:7px;margin-top:14px;color:#789084;font-size:13px;font-weight:750}
+.stat.dark .sub{color:#bcf0cf}
+.go{
+  position:absolute;right:20px;top:20px;width:40px;height:40px;border-radius:999px;border:1.5px solid currentColor;
+  display:grid;place-items:center;font-size:22px;font-weight:900;opacity:.9;
+}
+.pill{font-size:11px;font-weight:900;border-radius:99px;padding:4px 8px;border:1px solid currentColor;display:inline-flex;align-items:center;gap:4px}
+.pill.green{color:var(--green);background:#eefaf3;border-color:#bce7c9}
+.pill.red{color:var(--red);background:var(--redbg);border-color:#fecaca}
+.pill.amber{color:var(--amber);background:var(--amberbg);border-color:#fde68a}
+.pill.blue{color:var(--blue);background:var(--bluebg);border-color:#c7d7fe}
+.pill.purple{color:var(--purple);background:var(--purplebg);border-color:#ddd0ff}
+.pill.teal{color:var(--teal);background:var(--tealbg);border-color:#b8eef7}
+.card-head{
+  padding:20px 22px 12px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.card-title{font-size:20px;font-weight:920;letter-spacing:-.045em}
+.card-sub{font-size:12px;color:var(--muted);font-weight:700;margin-top:4px}
+.chart{
+  padding:12px 22px 24px;
+  height:236px;
+  display:flex;
+  align-items:end;
+  gap:18px;
+}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:end;gap:10px;min-width:32px;height:100%}
+.bar-stack{height:160px;width:100%;display:flex;align-items:end;justify-content:center;gap:5px}
+.bar{width:28%;border-radius:999px 999px 10px 10px;min-height:4px;transition:.25s}
+.bar.budget{background:#e7eee9;background-image:repeating-linear-gradient(135deg,rgba(81,99,89,.35) 0 4px,transparent 4px 8px)}
+.bar.book{background:#52bd83}
+.bar.cash{background:#0b5e35}
+.bar-label{font-size:13px;color:#7b8a80;font-weight:850}
+.reminder{
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  min-height:236px;
+}
+.reminder h3{font-size:24px;line-height:1.02;letter-spacing:-.05em}
+.reminder p{color:var(--muted);font-size:13px;font-weight:700}
+.reminder button{height:48px;border:0;background:var(--green);border-radius:999px;color:#fff;font-weight:900}
+.project-list{padding:0 20px 18px;display:grid;gap:14px}
+.project-item{
+  display:grid;grid-template-columns:32px 1fr auto;gap:12px;align-items:center;
+  padding:6px 0;cursor:pointer;
+}
+.project-ico{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-size:17px}
+.project-item b{display:block;font-size:14px}.project-item span{font-size:11px;color:var(--muted);font-weight:700}
+.table-wrap{overflow:auto;max-height:520px}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{
+  position:sticky;top:0;background:#fbfdfc;z-index:1;text-align:left;color:#8a998f;
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;font-weight:950;
+  padding:13px 18px;border-bottom:1px solid var(--line);white-space:nowrap;
+}
+.tbl td{padding:14px 18px;border-bottom:1px solid var(--line);vertical-align:middle;font-weight:650;color:var(--ink2)}
+.tbl tr{cursor:pointer}.tbl tr:hover td{background:#fbfdfc}
+.num{text-align:right;font-family:var(--mono);font-weight:900}
+.center{text-align:center}
+.avatar{
+  width:38px;height:38px;border-radius:14px;display:grid;place-items:center;font-weight:950;color:#fff;background:var(--green);
+}
+.owner-row{display:flex;align-items:center;gap:12px}
+.owner-row b{font-size:14px}.owner-row span{font-size:11px;color:var(--muted);display:block;margin-top:2px}
+.donut-card{padding:24px;display:flex;flex-direction:column;justify-content:space-between}
+.donut{
+  width:210px;height:210px;border-radius:50%;margin:8px auto 10px;
+  background:conic-gradient(var(--green) var(--pct), #e8eee9 0);
+  display:grid;place-items:center;position:relative;
+}
+.donut:after{content:"";position:absolute;width:122px;height:122px;background:#fff;border-radius:50%}
+.donut-in{position:relative;z-index:1;text-align:center}
+.donut-in b{font-size:46px;letter-spacing:-.06em}.donut-in span{display:block;color:var(--muted);font-weight:750}
+.legend{display:flex;gap:14px;justify-content:center;color:#6d7d72;font-size:13px;font-weight:800}
+.legend i{width:13px;height:13px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:-2px}
+.owner-panel{display:none}.owner-panel.active{display:block}
+.profile{
+  display:flex;align-items:center;gap:18px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-bottom:18px;box-shadow:var(--shadow2)
+}
+.profile .avatar{width:64px;height:64px;border-radius:22px;font-size:24px}
+.profile h3{font-size:24px;letter-spacing:-.05em}.profile p{color:var(--muted);font-weight:700;margin-top:4px}
+.profile-stats{margin-left:auto;display:flex;gap:24px;text-align:center}
+.profile-stats b{font-size:24px;display:block;letter-spacing:-.05em}.profile-stats span{font-size:10px;text-transform:uppercase;color:var(--muted);font-weight:950}
+.small-list{padding:0 20px 14px}
+.small-row{
+  display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;
+  padding:13px 0;border-bottom:1px solid var(--line);cursor:pointer;
+}
+.small-row:hover{background:#fbfdfc}
+.small-row b{font-size:13px}.small-row span{display:block;color:var(--muted);font-size:11px;margin-top:3px;font-weight:700}
+.more{width:100%;height:40px;border:0;background:#f1faf5;color:var(--green);font-weight:950;border-radius:0 0 var(--r) var(--r)}
+.hidden{display:none!important}
+.panel{display:none}.panel.active{display:block}
+.loading{
+  min-height:560px;display:grid;place-items:center;text-align:center;color:#5a6b60;
+}
+.loader{width:46px;height:46px;border-radius:50%;border:4px solid #dbece3;border-top-color:var(--green);animation:spin 1s linear infinite;margin:auto auto 18px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error-box{padding:28px;background:#fff1f2;border:1px solid #fecaca;border-radius:20px;color:#991b1b;font-weight:800}
+.modal-bg{
+  position:fixed;inset:0;background:rgba(15,23,42,.42);z-index:1000;display:none;align-items:center;justify-content:center;padding:28px;
+  backdrop-filter:blur(8px);
+}
+.modal-bg.active{display:flex}
+.modal{
+  width:min(1180px,96vw);max-height:88vh;background:#fff;border-radius:26px;box-shadow:0 28px 90px rgba(15,23,42,.22);overflow:hidden;
+  display:flex;flex-direction:column;
+}
+.modal-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 24px;border-bottom:1px solid var(--line)}
+.modal-head h3{font-size:24px;letter-spacing:-.05em}.modal-head p{font-size:12px;color:var(--muted);font-weight:750;margin-top:4px}
+.close{width:42px;height:42px;border:0;border-radius:14px;background:#f3f5f4;font-size:22px;font-weight:900}
+.modal-body{overflow:auto}
+.modal-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr 1fr;gap:0;border-bottom:1px solid var(--line)}
+.modal-grid>div{padding:14px 18px;font-size:13px;border-right:1px solid #f1f4f2}
+.modal-grid.head{position:sticky;top:0;background:#fbfdfc;z-index:2}
+.modal-grid.head>div{font-size:10px;color:#8a998f;text-transform:uppercase;letter-spacing:.1em;font-weight:950}
+.link{font-weight:900;color:var(--ink)}
+.muted{color:var(--muted)}
+@media(max-width:1280px){
+  .shell{width:100%;margin:0;border-radius:0;grid-template-columns:82px 1fr}
+  .sidebar{padding:22px 12px}.brand h1,.brand p,.nav-title,.nav-btn span:not(.badge),.mobile-card,.user-mini{display:none}
+  .nav-btn{justify-content:center}.badge{position:absolute;right:6px}.sidebar{min-height:100vh}
+  .main{padding:20px}.search{width:320px}.filters{grid-template-columns:1fr 1fr 1fr}.grid4{grid-template-columns:repeat(2,1fr)}.grid3,.grid2{grid-template-columns:1fr}
+  .hero{align-items:flex-start;flex-direction:column}.hero h2{font-size:38px}
+}
+@media(max-width:720px){
+  .shell{display:block}.sidebar{display:none}.main{padding:14px}.top{height:auto;padding:12px;flex-wrap:wrap}.search{width:100%}.top-spacer{display:none}
+  .grid4{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.hero-actions{flex-wrap:wrap}.primary,.outline{height:48px}
+  .chart{gap:8px}.bar{width:32%}.modal-grid{grid-template-columns:1fr}.modal-grid.head{display:none}.modal-grid>div{border-right:0}
+}
 </style>
 </head>
 <body>
-<div class="app">
-<aside class="sidebar">
-  <div class="sb-head"><div class="sb-logo">T</div><div><div class="sb-name">Talentera</div><div class="sb-tag">Retention Center</div></div></div>
-  <div class="sb-sep"></div>
-  <div class="sb-grp">Main</div>
-  <button class="sbi active" id="side-team" onclick="go('team')"><span class="sbi-dot"></span>Retention</button>
-  <button class="sbi" id="side-financial" onclick="go('financial')"><span class="sbi-dot"></span>Financial</button>
-  <div class="sb-sep" style="margin-top:8px"></div>
-  <div class="sb-grp">External</div>
-  <a class="sbi" href="#" id="acqLink"><span>📊</span>Acquisition<span class="sb-ext">↗</span></a>
-  <a class="sbi" href="#" id="pnlLink"><span>📈</span>P&amp;L<span class="sb-ext">↗</span></a>
-  <div class="sb-sep" style="margin-top:8px"></div>
-  <div class="sb-grp">RMs</div><div id="sbRm"></div>
-  <div class="sb-grp">CSMs</div><div id="sbCsm"></div>
-  <div class="sb-bot"><div class="sb-user"><div class="sb-av">SM</div><div><div class="sb-uname">Sales Manager</div><div class="sb-urole">Admin · Riyadh</div></div></div></div>
-</aside>
-<div class="main">
-  <div class="topbar"><div><div class="tb-greet" id="pageTitle">Retention · Team Overview</div><div class="tb-sub" id="tbSub">Loading…</div></div><div class="tb-r"><div class="tb-chip" id="tbDate">📅 —</div><div class="live-pill"><span class="live-d"></span>LIVE · HUBSPOT</div><button class="ref-btn" onclick="load()"><span id="ri">⟳</span> Refresh Data</button></div></div>
-  <div class="tabs" id="tabsBar"><button class="tb on" id="tab-team" onclick="go('team')">🏠 Team Overview</button><button class="tb" id="tab-financial" onclick="go('financial')">💰 Financial</button></div>
-  <div class="page"><div class="ls" id="LS"><div class="spin2"></div><div class="lt">Fetching Retention data…</div></div><div id="ERR" style="display:none"><div class="ls"><div style="font-size:32px">⚠️</div><div style="font-size:16px;font-weight:900;color:var(--red)">Failed to load data-retention.json</div><div style="font-size:12px;color:var(--muted);max-width:480px;text-align:center" id="ERRt"></div><button class="ref-btn" style="margin-top:8px" onclick="load()">⟳ Try Again</button></div></div>
-    <div id="DASH" style="display:none">
-      <div class="pnl on" id="panel-team">
-        <div class="filter-bar" id="filters"></div>
-        <div class="krow" id="kpiRow"></div>
-        <div class="fs"><div><div style="font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.46);margin-bottom:11px">Manager Focus — Retention Priority Actions</div><div class="fs-pills" id="focusPills"></div></div><div class="fs-ai"><div class="fs-ai-lbl">🤖 AI Summary</div><div class="fs-ai-txt" id="aiTxt">Loading AI insights…</div></div></div>
-        <div class="g2"><div class="card"><div class="ch"><div class="ct"><div class="ci" style="background:var(--blue-bg)">📊</div>Owner Activity & Renewal Performance</div><span class="b bb">YTD</span></div><div class="cw"><canvas id="ownerChart"></canvas></div></div><div class="card"><div class="ch"><div class="ct"><div class="ci" style="background:var(--green-bg)">🧭</div>Coverage Health</div><span class="b bg">Active Accounts</span></div><div class="mstrip" id="coverageStrip"></div></div></div>
-        <div class="card mb"><div class="ch"><div class="ct"><div class="ci" style="background:var(--purple-bg)">📆</div>Monthly Renewal Pipeline</div><span class="b bp">Click a month</span></div><div class="tw"><table class="tbl"><thead><tr><th>Month</th><th class="c">Due</th><th class="c">Renewed</th><th class="c">Booked</th><th class="c">Cashed</th><th class="c">Delayed</th><th class="c">Upcoming</th><th class="r">Value</th></tr></thead><tbody id="monthBody"></tbody></table></div></div>
-        <div class="g2e"><div class="card"><div class="ch"><div class="ct"><div class="ci" style="background:var(--red-bg)">🚨</div>Delayed Renewals</div><span class="b br" id="delayedBadge">0</span></div><div id="delayedList"></div></div><div class="card"><div class="ch"><div class="ct"><div class="ci" style="background:var(--amber-bg)">⏰</div>Tier Follow-Ups Due</div><span class="b ba" id="tierBadge">0</span></div><div id="tierList"></div></div></div>
-        <div class="card mb"><div class="ch"><div class="ct"><div class="ci" style="background:var(--cyan-bg)">👥</div>Owner Matrix</div><span class="b bc" id="ownerMatrixBadge">0 owners</span></div><div class="tw"><table class="tbl"><thead><tr><th>Owner</th><th>Role</th><th class="c">Accounts</th><th class="c">Active</th><th class="c">Churned</th><th class="c">Renewed</th><th class="r">Renewed $</th><th class="c">Booked</th><th class="r">Booked $</th><th class="c">Cashed</th><th class="r">Cashed $</th><th class="c">Delayed</th><th class="c">Follow-Ups</th></tr></thead><tbody id="ownerBody"></tbody></table></div></div>
-        <div class="lbl">Financial & Sheet Summary</div><div class="card mb"><div class="mstrip" id="sheetStrip"></div></div>
-        <div class="lbl">Open Action Lists</div><div class="pg" id="actionCards"></div>
-      </div>
-      <div class="pnl" id="panel-financial">
-        <div class="rh" style="--hc:var(--green)"><div class="rh-av" style="background:var(--green-bg);color:var(--green)">💰</div><div><div style="font-size:19px;font-weight:900">Retention Financial Details</div><div style="font-size:12px;color:var(--muted);margin-top:3px" id="finSub">Sheets + HubSpot retention stages</div></div></div>
-        <div class="card mb"><div class="ch"><div class="ct">📊 2026 Sheet Financial Summary</div><span class="b bg">YTD</span></div><div class="mstrip" id="finSheetStrip"></div></div>
-        <div class="card mb"><div class="ch"><div class="ct">👥 Owner Sheet Summary</div><span class="b bc" id="finOwnerB">0 owners</span></div><div class="tw"><table class="tbl"><thead><tr><th>Owner</th><th>Role</th><th class="c">Accounts</th><th class="r">Renewal Value</th><th class="r">Booked</th><th class="r">Booking Sheet</th><th class="r">Collected</th><th class="r">Remaining</th><th class="c">Delayed</th><th class="c">Upcoming</th></tr></thead><tbody id="finOwnerBody"></tbody></table></div></div>
-        <div class="g2e"><div class="card"><div class="ch"><div class="ct">✅ Booked / Pending Collection</div><span class="b ba" id="bookedPendingB">0</span></div><div id="bookedPendingList"></div></div><div class="card"><div class="ch"><div class="ct">💵 Collected / Cashed</div><span class="b bg" id="collectedB">0</span></div><div id="collectedList"></div></div></div>
-      </div>
-      <div id="repPanels"></div>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">T</div>
+      <div><h1>Talentera</h1><p>Retention Center</p></div>
     </div>
+
+    <div class="nav-title">Menu</div>
+    <div class="nav">
+      <button class="nav-btn active" data-go="dashboard" id="side-dashboard"><span class="nav-ico">▦</span><span>Dashboard</span></button>
+      <button class="nav-btn" data-go="financial" id="side-financial"><span class="nav-ico">▤</span><span>Financial</span></button>
+      <button class="nav-btn" id="side-budget" data-open="budget"><span class="nav-ico">☘</span><span>Budget Accounts</span><span class="badge" id="budgetCount">0</span></button>
+    </div>
+
+    <div class="nav-title">External</div>
+    <div class="nav">
+      <a class="nav-btn" href="#" id="acqLink"><span class="nav-ico">▣</span><span>Acquisition</span><span class="ext">↗</span></a>
+      <a class="nav-btn" href="#" id="pnlLink"><span class="nav-ico">⌁</span><span>P&L</span><span class="ext">↗</span></a>
+    </div>
+
+    <div class="nav-title">RMs</div>
+    <div class="nav" id="rmNav"></div>
+
+    <div class="nav-title">CSMs</div>
+    <div class="nav" id="csmNav"></div>
+
+    <div class="mobile-card">
+      <div class="mini-logo">✓</div>
+      <h3>Budget + Booked + Collection</h3>
+      <p>One filtered source of truth for 2026 retention tracking.</p>
+      <button onclick="exportCurrentCsv()">Export CSV</button>
+    </div>
+    <div class="user-mini">
+      <div class="user-av">SM</div>
+      <div><b>Sales Manager</b><span>Admin · Riyadh</span></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="top">
+      <div class="search"><span style="font-size:22px">⌕</span><input id="searchInput" placeholder="Search account, owner, product..." /><span class="kbd">⌘ F</span></div>
+      <div class="top-spacer"></div>
+      <button class="icon-btn" title="Export CSV" onclick="exportCurrentCsv()">⇩</button>
+      <button class="icon-btn" title="Clear filters" onclick="clearFilters()">⟲</button>
+      <div class="live">LIVE · SHEETS</div>
+      <button class="refresh" onclick="reloadData()">↻ Refresh Data</button>
+    </div>
+
+    <section class="hero">
+      <div>
+        <h2 id="pageTitle">Retention Dashboard</h2>
+        <p id="pageSub">Budget + Booking Sheet + Collection · filtered view</p>
+      </div>
+      <div class="hero-actions">
+        <button class="primary" onclick="setTab('financial')"><span>+</span> Financial View</button>
+        <button class="outline" onclick="openRows('All Filtered Accounts', filteredAccounts(), 'sheet')">Open Data</button>
+      </div>
+    </section>
+
+    <div class="tabs" id="tabs"></div>
+
+    <section class="filters">
+      <div class="fld"><span>⌕</span><input id="fltSearch" placeholder="Filter accounts..." /></div>
+      <div class="fld"><select id="fltRole"><option value="">All roles</option><option value="RM">RM only</option><option value="CSM">CSM only</option></select></div>
+      <div class="fld"><select id="fltOwner"><option value="">All owners</option></select></div>
+      <div class="fld"><select id="fltMonth"><option value="">All months</option></select></div>
+      <div class="fld"><select id="fltMonthField"><option value="any">Month: Any</option><option value="renewal">Renewal</option><option value="booking">Booking</option><option value="collection">Collection</option></select></div>
+      <div class="fld"><select id="fltProduct"><option value="">All products</option></select></div>
+      <div class="fld"><select id="fltStatus"><option value="">All statuses</option></select></div>
+      <div class="fld"><select id="fltLocation"><option value="">All countries</option></select></div>
+      <button class="clear" onclick="clearFilters()">Clear</button>
+    </section>
+
+    <div id="loading" class="loading">
+      <div>
+        <div class="loader"></div>
+        <h3>Loading retention data...</h3>
+        <p class="muted">Reading data-retention.json</p>
+      </div>
+    </div>
+
+    <div id="appContent" class="hidden">
+      <section id="panel-dashboard" class="panel active">
+        <div class="grid4" id="mainStats"></div>
+
+        <div style="height:16px"></div>
+        <div class="grid3">
+          <div class="card">
+            <div class="card-head"><div><div class="card-title">Monthly Analytics</div><div class="card-sub">Budget vs Booking vs Collection</div></div><span class="pill green">2026</span></div>
+            <div class="chart" id="monthlyChart"></div>
+          </div>
+          <div class="card reminder">
+            <div>
+              <div class="card-title">Retention Reminder</div>
+              <h3 id="riskTitle">—</h3>
+              <p id="riskText">—</p>
+            </div>
+            <button onclick="openRows('Priority Accounts', priorityRows(), 'sheet')">Open Priority</button>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><div class="card-title">Actions</div><div class="card-sub">Clickable retention lists</div></div><button class="pill green" onclick="openRows('All Actions', priorityRows(), 'sheet')">+ Open</button></div>
+            <div class="project-list" id="actionList"></div>
+          </div>
+        </div>
+
+        <div style="height:16px"></div>
+        <div class="grid2">
+          <div class="card">
+            <div class="card-head"><div><div class="card-title">Owner Summary · RM</div><div class="card-sub">Owner-level counts; filtered by current controls</div></div><span class="pill teal" id="rmSummaryCount">0 owners</span></div>
+            <div class="table-wrap"><table class="tbl"><thead><tr><th>Owner</th><th class="num">Budget</th><th class="num">Booking</th><th class="num">Cash</th><th class="num">Booked Not Cash</th><th class="center">Delayed</th></tr></thead><tbody id="rmSummaryBody"></tbody></table></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><div class="card-title">Owner Summary · CSM</div><div class="card-sub">Same accounts may appear under RM and CSM</div></div><span class="pill purple" id="csmSummaryCount">0 owners</span></div>
+            <div class="table-wrap"><table class="tbl"><thead><tr><th>Owner</th><th class="num">Budget</th><th class="num">Booking</th><th class="num">Cash</th><th class="num">Booked Not Cash</th><th class="center">Delayed</th></tr></thead><tbody id="csmSummaryBody"></tbody></table></div>
+          </div>
+        </div>
+
+        <div style="height:16px"></div>
+        <div class="grid2">
+          <div class="card">
+            <div class="card-head"><div><div class="card-title">Team Collaboration</div><div class="card-sub">Top owners by booked not cash / delayed load</div></div><button class="pill green" onclick="setTab('financial')">Financial</button></div>
+            <div class="small-list" id="collabList"></div>
+          </div>
+          <div class="card donut-card">
+            <div class="card-head" style="padding:0 0 8px"><div><div class="card-title">Collection Progress</div><div class="card-sub">Cash collected ÷ booking sheet</div></div></div>
+            <div class="donut" id="progressDonut" style="--pct:0deg"><div class="donut-in"><b id="progressPct">0%</b><span>Collected</span></div></div>
+            <div class="legend"><span><i style="background:var(--green)"></i>Collected</span><span><i style="background:#e8eee9"></i>Remaining</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-financial" class="panel">
+        <div class="grid4" id="financialStats"></div>
+
+        <div style="height:16px"></div>
+        <div class="grid2">
+          <div class="card">
+            <div class="card-head"><div><div class="card-title">Booked / Pending Collection</div><div class="card-sub">Uses remainingCollection / Booked Not Cash only</div></div><span class="pill amber" id="pendingBadge">0</span></div>
+            <div class="small-list" id="pendingList"></div>
+            <button class="more" onclick="openRows('Booked / Pending Collection', pendingRows(), 'sheet')">View all rows →</button>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><div class="card-title">Collected / Cashed</div><div class="card-sub">Uses Collection sheet cash values</div></div><span class="pill green" id="collectedBadge">0</span></div>
+            <div class="small-list" id="collectedList"></div>
+            <button class="more" onclick="openRows('Collected / Cashed', collectedRows(), 'sheet')">View all rows →</button>
+          </div>
+        </div>
+
+        <div style="height:16px"></div>
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">Filtered Account Ledger</div><div class="card-sub">Budget + Booking + Collection rows after all filters</div></div><span class="pill teal" id="ledgerBadge">0 rows</span></div>
+          <div class="table-wrap"><table class="tbl"><thead><tr><th>Account</th><th>RM</th><th>CSM</th><th>Product</th><th>Status</th><th>Month</th><th class="num">Budget</th><th class="num">Booking</th><th class="num">Cash</th><th class="num">Booked Not Cash</th></tr></thead><tbody id="ledgerBody"></tbody></table></div>
+        </div>
+      </section>
+
+      <section id="ownerPanels"></section>
+    </div>
+  </main>
+</div>
+
+<div class="modal-bg" id="modalBg" onclick="modalBackdrop(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <div><h3 id="modalTitle">Rows</h3><p id="modalSub">Showing all available rows.</p></div>
+      <button class="close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
   </div>
-</div></div>
-<div class="mbg" id="MBG" onclick="if(event.target===this)cm()"><div class="mc2"><div class="mh"><div><div class="mh-t" id="MT">Details</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="MD"></div></div><button class="mc-close" onclick="cm()">×</button></div><div class="mb2" id="MB"></div></div></div>
+</div>
+
 <script>
-const C={
-  sources:['./data-retention.json','data-retention.json','./data-retention (22).json','https://amohamed-alt.github.io/talentera-huddle/data-retention.json','https://raw.githubusercontent.com/amohamed-alt/talentera-huddle/refs/heads/main/data-retention.json'],
-  acq:'#',pnl:'#'
+const DATA_URL = './data-retention.json';
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+let RAW = null;
+let CURRENT_TAB = 'dashboard';
+let CURRENT_OWNER = null;
+
+const $ = id => document.getElementById(id);
+const esc = v => String(v ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const norm = v => String(v ?? '').trim().toLowerCase();
+const money = v => {
+  const n = Number(v || 0);
+  const abs = Math.abs(n);
+  const sign = n < 0 ? '-' : '';
+  if(abs >= 1000000) return sign + '$' + (abs/1000000).toFixed(abs >= 10000000 ? 0 : 2).replace(/\.00$/,'') + 'M';
+  if(abs >= 1000) return sign + '$' + (abs/1000).toFixed(abs >= 100000 ? 0 : 1).replace(/\.0$/,'') + 'K';
+  return sign + '$' + Math.round(abs).toLocaleString();
 };
-document.getElementById('acqLink').href=C.acq;document.getElementById('pnlLink').href=C.pnl;
-let D=null,TAB=localStorage.getItem('ret_tab')||'team',ownerChart=null;
-let MINI_ROWS={};
-let FILTERS={role:'all',owner:'all',tier:'all',status:'all',product:'all',month:'all'};
-const $=id=>document.getElementById(id);
-const E=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const N=s=>String(s??'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
-function F(n){const v=parseFloat(n);if(!v||isNaN(v))return'$0';if(Math.abs(v)>=1e6)return'$'+(v/1e6).toFixed(2)+'M';if(Math.abs(v)>=1e3)return'$'+Math.round(v/1e3)+'K';return'$'+Math.round(v).toLocaleString();}
-function M(n){const v=parseFloat(n);if(!v||isNaN(v))return'$0';if(Math.abs(v)>=1e6)return'$'+(v/1e6).toFixed(2)+'M';if(Math.abs(v)>=1e3)return'$'+(v/1e3).toFixed(1)+'K';return'$'+Math.round(v).toLocaleString();}
-function H(id,v){const e=$(id);if(e)e.innerHTML=v;}function T(id,v){const e=$(id);if(e)e.textContent=v;}
-function rl(n,u){return u&&u!=='#'?'<a class="rl" href="'+E(u)+'" target="_blank" rel="noopener">'+E(n||'Open')+'</a>':'<span>'+E(n||'—')+'</span>';}
-function rowsum(arr,k='amount'){return (arr||[]).reduce((s,x)=>s+(Number(x[k]??x.renewalValue??x.renewalValue2026??0)||0),0);}
-function owners(){return D?.ownerMatrix||D?.repData||[]}function repsByRole(role){return owners().filter(r=>role==='all'||r.role===role)}
-function accounts(){return D?.accounts||[...(D?.accountsSplit?.active||[]),...(D?.accountsSplit?.churned||[])]}
-function split(k){return D?.dealsSplit?.[k]||[]}function alerts(k){return D?.alerts?.[k]||[]}
-function sameOwner(row,name){if(!name||name==='all')return true;const n=N(name);return [row.ownerName,row.rmOwnerName,row.csmOwnerName,row.rm,row.csm,row.owner].some(x=>N(x)===n||N(x).includes(n)||n.includes(N(x)));}
-function ownerRole(name){const r=owners().find(o=>N(o.name)===N(name)||N(o.name).includes(N(name))||N(name).includes(N(o.name)));return r?.role||'';}
-function rowTier(row){return row.companyTier||row.tier||row.tierLabel?.replace(/Tier\s*/i,'')||''}
-function rowStatus(row){return row.accountStatus||row.status||''}
-function rowProduct(row){return row.product||''}
-function rowMonth(row){const raw=row.renewalMonth||row.contractRenewalDate||row.actionDate||row.bookedDateEntered||row.cashedDateEntered||row.churnedDateEntered||row.createdAt||'';const s=String(raw);if(/^\d{4}-\d{2}/.test(s))return s.slice(0,7);const map={january:'01',jan:'01',february:'02',feb:'02',march:'03',mar:'03',april:'04',apr:'04',may:'05',june:'06',jun:'06',july:'07',jul:'07',august:'08',aug:'08',september:'09',sep:'09',october:'10',oct:'10',november:'11',nov:'11',december:'12',dec:'12'};const m=map[N(s)];return m?'2026-'+m:'';}
-function matchesFilters(row,{ignoreMonth=false}={}){if(FILTERS.owner!=='all'&&!sameOwner(row,FILTERS.owner))return false;if(FILTERS.role!=='all'&&FILTERS.owner==='all'){const role=ownerRole(row.ownerName||row.rmOwnerName||row.csmOwnerName||row.owner||'');if(role&&role!==FILTERS.role)return false;if(!role){if(FILTERS.role==='RM'&&!row.rmOwnerName&&!row.ownerName)return false;if(FILTERS.role==='CSM'&&!row.csmOwnerName)return false;}}const tier=N(rowTier(row));if(FILTERS.tier!=='all'){if(FILTERS.tier==='empty'){if(tier&&tier!=='missing tier')return false;}else if(tier!==N(FILTERS.tier)&&tier!==N('Tier '+FILTERS.tier))return false;}if(FILTERS.status!=='all'&&N(rowStatus(row))!==N(FILTERS.status))return false;if(FILTERS.product!=='all'&&rowProduct(row)&&!N(rowProduct(row)).includes(N(FILTERS.product)))return false;if(!ignoreMonth&&FILTERS.month!=='all'&&rowMonth(row)!==FILTERS.month)return false;return true;}
-function filteredAccounts(){return accounts().filter(a=>matchesFilters(a,{ignoreMonth:true}))}function filteredDeals(arr){return (arr||[]).filter(r=>matchesFilters(r))}
-function filteredOwnerRows(){return owners().filter(r=>(FILTERS.role==='all'||r.role===FILTERS.role)&&(FILTERS.owner==='all'||sameOwner(r,FILTERS.owner)))}
-async function fetchJson(urls){for(const u of urls){try{const sep=u.includes('?')?'&':'?';const r=await fetch(u+sep+'t='+Date.now(),{cache:'no-store'});if(r.ok)return await r.json();}catch(e){}}throw new Error('No retention data source responded');}
-async function load(){const ri=$('ri');if(ri)ri.classList.add('spin-i');$('ERR').style.display='none';$('LS').style.display='flex';$('DASH').style.display='none';try{D=await fetchJson(C.sources);render();go(TAB);}catch(e){$('LS').style.display='none';$('ERR').style.display='block';T('ERRt','Error: '+e.message+' — publish data-retention.json in the repo root.');}finally{if(ri)ri.classList.remove('spin-i');}}
-function render(){ $('LS').style.display='none';$('DASH').style.display='block';const now=new Date();T('tbDate','📅 '+now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}));T('tbSub','Updated '+(D.generatedAt||D.lastUpdated||'')+' · Retention Command Center');buildNav();buildFilters();renderOverview();renderFinancial();buildRepPanels();}
-function buildNav(){const tb=$('tabsBar');document.querySelectorAll('.tb[data-rep]').forEach(x=>x.remove());H('sbRm','');H('sbCsm','');owners().forEach(r=>{const slug='owner-'+r.id;const btn=document.createElement('button');btn.className='tb';btn.id='tab-'+slug;btn.dataset.rep='1';btn.onclick=()=>go(slug);btn.innerHTML=E(shortName(r.name))+(r.delayed>0?'<span class="tb-chip2">'+r.delayed+'</span>':'');tb.appendChild(btn);const sb=document.createElement('button');sb.className='sbi';sb.id='side-'+slug;sb.onclick=()=>go(slug);sb.innerHTML='<span class="sbi-dot" style="background:'+E(r.color||'#16a34a')+'"></span>'+E(displayName(r.name))+(r.tierFollowupDue?'<span class="sb-badge">'+r.tierFollowupDue+'</span>':'');$(r.role==='CSM'?'sbCsm':'sbRm').appendChild(sb);});}
-function shortName(n){return String(n||'').replace('Mohammed ','').replace('Mohammad ','').split(' ')[0]}function displayName(n){return String(n||'').replace('Mohammed ','M. ').replace('Mohammad ','M. ')}
-function buildFilters(){const ownerOpts=['<option value="all">All owners</option>'].concat(owners().map(r=>'<option value="'+E(r.name)+'">'+E(displayName(r.name))+' · '+E(r.role)+'</option>')).join('');const statuses=unique([...accounts(),...D.renewalPipeline||[],...D.deals||[]].map(rowStatus).filter(Boolean));const products=unique([...(D.renewalPipeline||[]),...(D.deals||[]),...(D.retentionSheets2026?.accounts||[])].map(rowProduct).filter(Boolean).flatMap(p=>String(p).split(/[;,]/).map(x=>x.trim()).filter(Boolean)));const months=unique([...(D.monthlyRenewalPipeline||[]).map(x=>x.month),...(D.retentionSheets2026?.accounts||[]).map(rowMonth)].filter(Boolean)).sort();H('filters','<div class="flt"><label>Role</label><select id="fRole" onchange="setFilter(\'role\',this.value)"><option value="all">All</option><option value="RM">RM</option><option value="CSM">CSM</option></select></div><div class="flt"><label>Owner</label><select id="fOwner" onchange="setFilter(\'owner\',this.value)">'+ownerOpts+'</select></div><div class="flt"><label>Tier</label><select id="fTier" onchange="setFilter(\'tier\',this.value)"><option value="all">All</option><option value="A">Tier A</option><option value="B">Tier B</option><option value="C">Tier C</option><option value="empty">Empty / Missing</option></select></div><div class="flt"><label>Status</label><select id="fStatus" onchange="setFilter(\'status\',this.value)"><option value="all">All</option>'+statuses.map(s=>'<option value="'+E(s)+'">'+E(s)+'</option>').join('')+'</select></div><div class="flt"><label>Product</label><select id="fProduct" onchange="setFilter(\'product\',this.value)"><option value="all">All</option>'+products.map(p=>'<option value="'+E(p)+'">'+E(p)+'</option>').join('')+'</select></div><div class="flt"><label>Month</label><select id="fMonth" onchange="setFilter(\'month\',this.value)"><option value="all">All</option>'+months.map(m=>'<option value="'+E(m)+'">'+E(m)+'</option>').join('')+'</select></div><button class="clear-btn" onclick="clearFilters()">Reset</button>');syncFilters();}
-function unique(a){return [...new Set(a.map(x=>String(x||'').trim()).filter(Boolean))]}function setFilter(k,v){FILTERS[k]=v;renderOverview();renderFinancial();syncFilters();}function clearFilters(){FILTERS={role:'all',owner:'all',tier:'all',status:'all',product:'all',month:'all'};renderOverview();renderFinancial();syncFilters();}function syncFilters(){[['fRole','role'],['fOwner','owner'],['fTier','tier'],['fStatus','status'],['fProduct','product'],['fMonth','month']].forEach(([id,k])=>{if($(id))$(id).value=FILTERS[k];});}
-function renderOverview(){const acc=filteredAccounts(),del=filteredDeals(D.delayedRenewals||[]),renew=filteredDeals(split('renewed')),book=filteredDeals(split('booked')),cash=filteredDeals(split('cashed')),churn=filteredDeals(split('churn')),tier=filteredDeals(alerts('tierFollowups')),noAct=filteredDeals(alerts('noActivity')),noMeet=filteredDeals(alerts('noMeeting'));const active=acc.filter(a=>N(a.accountStatus)==='active'),churnAcc=acc.filter(a=>N(a.accountStatus)==='churned');const cards=[{l:'Active Accounts',v:active.length,sub:churnAcc.length+' churned · '+acc.length+' total',c:'var(--green)',ic:'🏢',rows:active,t:'account'},{l:'Delayed Renewals',v:del.length,sub:M(rowsum(del,'renewalValue'))+' exposure',c:'var(--red)',ic:'🚨',rows:del,t:'deal'},{l:'Renewed YTD',v:renew.length,sub:M(rowsum(renew,'renewalValue'))+' value',c:'var(--blue)',ic:'🔁',rows:renew,t:'deal'},{l:'Tier Follow-Ups',v:tier.length,sub:noAct.length+' no touch · '+noMeet.length+' no meeting',c:'var(--amber)',ic:'⏰',rows:tier,t:'account'}];H('kpiRow',cards.map((x,i)=>'<div class="kc" onclick="openRows(\''+E(x.l).replace(/'/g,'&#39;')+'\', dataBucket.kpis['+i+'].rows, \''+x.t+'\')"><div class="kc-top"><div class="kc-lbl">'+E(x.l)+'</div><div class="kc-ico" style="background:'+colorBg(x.c)+'">'+x.ic+'</div></div><div class="kc-val" style="color:'+x.c+'">'+(typeof x.v==='number'?x.v.toLocaleString():E(x.v))+'</div><div class="kc-sub">'+E(x.sub)+'</div><div class="kc-bar"><div class="kc-barf" style="width:'+Math.min(100,Number(x.v)||0)+'%;background:'+x.c+'"></div></div></div>').join(''));window.dataBucket={kpis:cards,focus:{del,noAct,noMeet,tier,missing:acc.filter(a=>!a.companyTier),book,cash,churn}};H('focusPills',[{v:del.length,l:'Delayed Renewals',r:del,t:'deal'},{v:noAct.length,l:'No Activity 30D',r:noAct,t:'account'},{v:noMeet.length,l:'No Meeting 90D',r:noMeet,t:'account'},{v:tier.length,l:'Tier Follow-Ups',r:tier,t:'account'},{v:acc.filter(a=>!a.companyTier).length,l:'Missing Tier',r:acc.filter(a=>!a.companyTier),t:'account'}].map(x=>'<div class="fp" onclick="openRows(\''+E(x.l).replace(/'/g,'&#39;')+'\', dataBucket.focus[\''+keyFor(x.l)+'\'], \''+x.t+'\')"><div class="fp-v">'+x.v.toLocaleString()+'</div><div class="fp-l">'+E(x.l)+'</div></div>').join(''));T('aiTxt',(D.aiInsights?.summary||D.aiInsights?.[0]?.summary||D.autoRecs?.[0]?.text||'Retention insights ready from current data.'));renderCoverage(acc,noAct,noMeet);renderOwnerChart();renderMonths();renderLists(del,tier);renderOwnerMatrix();renderSheetsStrip();renderActionCards();}
-function keyFor(l){return {'Delayed Renewals':'del','No Activity 30D':'noAct','No Meeting 90D':'noMeet','Tier Follow-Ups':'tier','Missing Tier':'missing'}[l]||'del'}function colorBg(c){return c.includes('red')?'var(--red-bg)':c.includes('amber')?'var(--amber-bg)':c.includes('blue')?'var(--blue-bg)':c.includes('cyan')?'var(--cyan-bg)':'var(--green-bg)'}
-function renderCoverage(acc,noAct,noMeet){const cd=D.coverageDetails||{};const vals=[{v:(cd.callCoverage??0)+'%',l:'Call Coverage',c:'var(--green)',r:cd.noCall||[]},{v:(cd.meetingCoverage??0)+'%',l:'Meeting Coverage',c:'var(--blue)',r:cd.noMeeting||[]},{v:(cd.rmTouchCoverage??0)+'%',l:'RM Touch',c:'var(--cyan)',r:cd.noRmTouch||[]},{v:(cd.csmTouchCoverage??0)+'%',l:'CSM Touch',c:'var(--purple)',r:cd.noCsmTouch||[]},{v:noAct.length,l:'No Activity 30D',c:'var(--red)',r:noAct},{v:noMeet.length,l:'No Meeting 90D',c:'var(--amber)',r:noMeet},{v:acc.filter(a=>a.rmFollowupDue).length,l:'RM Due',c:'var(--red)',r:acc.filter(a=>a.rmFollowupDue)},{v:acc.filter(a=>a.csmFollowupDue).length,l:'CSM Due',c:'var(--amber)',r:acc.filter(a=>a.csmFollowupDue)}];H('coverageStrip',vals.map((x,i)=>'<div class="mk" onclick="openRows(\''+E(x.l).replace(/'/g,'&#39;')+'\', coverageData['+i+'].r, \'account\')"><div class="mk-v" style="color:'+x.c+'">'+E(x.v)+'</div><div class="mk-l">'+E(x.l)+'</div></div>').join(''));window.coverageData=vals;}
-function renderOwnerChart(){const rows=filteredOwnerRows();const ctx=$('ownerChart');if(!ctx)return;if(ownerChart)ownerChart.destroy();ownerChart=new Chart(ctx,{type:'bar',data:{labels:rows.map(r=>shortName(r.name)),datasets:[{label:'Accounts',data:rows.map(r=>r.accounts||0),backgroundColor:'rgba(14,116,144,.12)',borderColor:'#0e7490',borderWidth:1.5,borderRadius:7},{label:'Renewed',data:rows.map(r=>r.renewed||0),backgroundColor:'rgba(22,163,74,.12)',borderColor:'#16a34a',borderWidth:1.5,borderRadius:7},{label:'Delayed',data:rows.map(r=>r.delayed||0),backgroundColor:'rgba(220,38,38,.12)',borderColor:'#dc2626',borderWidth:1.5,borderRadius:7},{label:'Meetings',data:rows.map(r=>r.meetings||0),backgroundColor:'rgba(124,58,237,.12)',borderColor:'#7c3aed',borderWidth:1.5,borderRadius:7}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:9,usePointStyle:true,font:{size:11.5}}},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,grid:{color:'rgba(0,0,0,.04)'}}}}});}
-function renderMonths(){const rows=(D.monthlyRenewalPipeline||[]).filter(m=>FILTERS.month==='all'||m.month===FILTERS.month).map(m=>({...m,rows:filteredDeals(m.rows||[])}));H('monthBody',rows.map((m,i)=>'<tr onclick="openRows(\'Renewal Pipeline · '+E(m.month)+'\', monthRows['+i+'].rows, \'deal\')" style="cursor:pointer"><td class="m">'+E(m.month)+'</td><td class="c m">'+(m.rows.length||m.due||0)+'</td><td class="c" style="color:var(--green);font-weight:800">'+(m.renewed||0)+'</td><td class="c" style="color:var(--amber);font-weight:800">'+(m.booked||0)+'</td><td class="c" style="color:var(--blue);font-weight:800">'+(m.cashed||0)+'</td><td class="c" style="color:var(--red);font-weight:800">'+(m.delayed||0)+'</td><td class="c">'+(m.upcoming||0)+'</td><td class="r m">'+M(rowsum(m.rows,'renewalValue')||m.value)+'</td></tr>').join('')||'<tr><td colspan="8"><div class="me">No monthly renewal pipeline for current filters.</div></td></tr>');window.monthRows=rows;}
-function renderLists(del,tier){T('delayedBadge',del.length+' · '+M(rowsum(del,'renewalValue')));T('tierBadge',tier.length+' actions');H('delayedList',smallRows(del,'deal','delayedListAll'));H('tierList',smallRows(tier,'account','tierListAll'));window.delayedListAll=del;window.tierListAll=tier;}
-function smallRows(rows,type,varName,limit=7){const show=rows.slice(0,limit),rest=rows.length-limit;let html=show.map(r=>rowHtml(r,type)).join('')||(rows.length===0?'<div class="me">No rows for current filters.</div>':'');if(rest>0)html+='<button class="more" onclick="openRows(\'All Details\','+varName+',\''+type+'\')">View all '+rows.length+' rows →</button>';return html;}
-function rowHtml(r,type){const name=r.name||r.companyName||r.clientName||'Unnamed';const comp=r.companyName&&r.name!==r.companyName?r.companyName:'';const meta=[comp,rowTier(r),rowStatus(r),r.product,rowMonth(r),r.daysOverdue!=null?r.daysOverdue+'d overdue':r.daysSinceActivity!=null?r.daysSinceActivity+'d since activity':null].filter(Boolean).join(' · ');const amount=r.renewalValue??r.amount??r.renewalValue2026??0;const owner=r.ownerName||r.rmOwnerName||r.csmOwnerName||r.owner||'';return '<div class="dr"><div style="flex:1;min-width:0"><div class="dn2">'+rl(name,r.hubspotUrl||r.companyUrl)+'</div><div class="dm">'+E(meta)+'</div></div><span class="sp '+badgeClass(r)+'">'+E(owner||r.status||rowTier(r)||'—')+'</span><div class="da" style="color:var(--green)">'+M(amount)+'</div></div>';}
-function badgeClass(r){const s=N(r.status||r.accountStatus||r.stageType);if(s.includes('delayed')||s.includes('churn'))return 'sl';if(s.includes('book'))return 'sa';if(s.includes('cash')||s.includes('renew'))return 'sw';return 'so';}
-function renderOwnerMatrix(){const rows=filteredOwnerRows();T('ownerMatrixBadge',rows.length+' owners');H('ownerBody',rows.map(r=>'<tr onclick="go(\'owner-'+E(r.id)+'\')" style="cursor:pointer"><td><div style="display:flex;align-items:center;gap:8px"><span style="width:23px;height:23px;border-radius:7px;background:'+E(r.color||'#16a34a')+'20;color:'+E(r.color||'#16a34a')+';display:grid;place-items:center;font-weight:900">'+E((r.name||'?')[0])+'</span><b>'+E(displayName(r.name))+'</b></div></td><td><span class="sp '+(r.role==='RM'?'sc':'bp')+'">'+E(r.role)+'</span></td><td class="c m">'+(r.accounts||0)+'</td><td class="c m" style="color:var(--green)">'+(r.activeAccounts||0)+'</td><td class="c m" style="color:var(--red)">'+(r.churnedAccounts||0)+'</td><td class="c m">'+(r.renewed||0)+'</td><td class="r m">'+M(r.renewedAmt)+'</td><td class="c m">'+(r.booked||0)+'</td><td class="r m">'+M(r.bookedAmt)+'</td><td class="c m">'+(r.cashed||0)+'</td><td class="r m">'+M(r.cashedAmt)+'</td><td class="c m" style="color:var(--red)">'+(r.delayed||0)+'</td><td class="c m" style="color:var(--amber)">'+(r.tierFollowupDue||0)+'</td></tr>').join(''));}
-function renderSheetsStrip(){const s=D.retentionSheets2026?.summary||{};const vals=[{v:M(s.totalRenewalValue),l:'Renewal Value',c:'var(--green)',rows:D.retentionSheets2026?.accounts||[]},{v:M(s.totalBookingSheetValue),l:'Booking Sheet',c:'var(--amber)',rows:D.retentionSheets2026?.bookingSheetAccounts||[]},{v:M(s.totalCollectedValue),l:'Collected',c:'var(--blue)',rows:D.retentionSheets2026?.collectedAccounts||[]},{v:M(s.remainingCollection),l:'Remaining',c:'var(--red)',rows:D.retentionSheets2026?.bookedPendingCollectionAccounts||[]},{v:s.delayedAccounts||0,l:'Delayed Accounts',c:'var(--red)',rows:D.retentionSheets2026?.delayedAccounts||[]},{v:s.upcomingAccounts||0,l:'Upcoming',c:'var(--cyan)',rows:D.retentionSheets2026?.upcomingAccounts||[]},{v:s.renewedLateAccounts||0,l:'Renewed Late',c:'var(--amber)',rows:D.retentionSheets2026?.renewedLateAccounts||[]},{v:s.noActionYetAccounts||0,l:'No Action Yet',c:'var(--muted)',rows:D.retentionSheets2026?.noActionYetAccounts||[]}];H('sheetStrip',vals.map((x,i)=>'<div class="mk" onclick="openRows(\''+E(x.l).replace(/'/g,'&#39;')+'\', sheetVals['+i+'].rows, \'sheet\')"><div class="mk-v" style="color:'+x.c+'">'+E(x.v)+'</div><div class="mk-l">'+E(x.l)+'</div></div>').join(''));window.sheetVals=vals;}
-function renderActionCards(){const cards=[{t:'No Call Coverage',rows:D.coverageDetails?.noCall||[],c:'var(--red)'},{t:'No Meeting Coverage',rows:D.coverageDetails?.noMeeting||[],c:'var(--amber)'},{t:'Renewal Attention',rows:filteredDeals(D.renewalAttention||[]),c:'var(--purple)'},{t:'Churn Deals',rows:filteredDeals(split('churn')),c:'var(--red)'}];H('actionCards',cards.map((c,i)=>'<div class="pc" style="border-top:3px solid '+c.c+'"><div class="pc-h"><div style="font-weight:900;color:'+c.c+'">'+E(c.t)+'</div><span class="b br">'+c.rows.length+'</span></div>'+c.rows.slice(0,4).map(r=>'<div class="pd"><div style="min-width:0"><div class="pd-n">'+rl(r.name||r.companyName||r.clientName,r.hubspotUrl||r.companyUrl)+'</div><div class="pd-s">'+E([r.rmOwnerName,r.csmOwnerName,rowTier(r),r.daysOverdue? r.daysOverdue+'d overdue':null].filter(Boolean).join(' · '))+'</div></div><div class="m">'+M(r.renewalValue||r.amount||0)+'</div></div>').join('')+'<button class="more" onclick="openRows(\''+E(c.t).replace(/'/g,'&#39;')+'\', actionCardData['+i+'].rows, \'account\')">View all '+c.rows.length+' →</button></div>').join(''));window.actionCardData=cards;}
-function renderFinancial(){renderSheetsStrip();H('finSheetStrip',$('sheetStrip')?.innerHTML||'');const os=D.retentionSheets2026?.ownerSummary||[];T('finOwnerB',os.length+' owners');H('finOwnerBody',os.map((r,i)=>'<tr onclick="openRows(\'Sheet Accounts · '+E(r.owner).replace(/'/g,'&#39;')+'\', finOwnerRows['+i+'], \'sheet\')" style="cursor:pointer"><td><b>'+E(r.owner)+'</b></td><td><span class="sp '+(r.role==='RM'?'sc':'bp')+'">'+E(r.role)+'</span></td><td class="c m">'+(r.accounts||0)+'</td><td class="r m">'+M(r.renewalValue)+'</td><td class="r m">'+M(r.bookedValue)+'</td><td class="r m">'+M(r.bookingSheetValue)+'</td><td class="r m">'+M(r.collectedValue)+'</td><td class="r m" style="color:var(--red)">'+M(r.remainingCollection)+'</td><td class="c m" style="color:var(--red)">'+(r.delayedAccounts||0)+'</td><td class="c m">'+(r.upcomingAccounts||0)+'</td></tr>').join(''));window.finOwnerRows=os.map(o=>(D.retentionSheets2026?.accounts||[]).filter(a=>N(a.rm||a.owner)===N(o.owner)||N(a.csm)===N(o.owner)));const bp=D.retentionSheets2026?.bookedPendingCollectionAccounts||[];const col=D.retentionSheets2026?.collectedAccounts||D.retentionSheets2026?.cashedAccounts||[];T('bookedPendingB',bp.length+' · '+M(rowsum(bp,'renewalValue')));T('collectedB',col.length+' · '+M(rowsum(col,'renewalValue')));H('bookedPendingList',smallRows(bp,'sheet','bookedPendingAll'));H('collectedList',smallRows(col,'sheet','collectedAll'));window.bookedPendingAll=bp;window.collectedAll=col;}
-function buildRepPanels(){const box=$('repPanels');box.innerHTML='';owners().forEach(r=>{const det=D.ownerDetails?.[r.id]||{};const acc=det.accounts||accounts().filter(a=>sameOwner(a,r.name));const del=det.delayedRenewals||filteredDeals(D.delayedRenewals||[]).filter(x=>sameOwner(x,r.name));const ren=det.renewedDeals||[];const book=det.bookedDeals||[];const cash=det.cashedDeals||[];const churn=det.churnDeals||[];const tierRows=acc.filter(a=>a.rmFollowupDue||a.csmFollowupDue);const slug='owner-'+r.id;const p=document.createElement('div');p.className='pnl';p.id='panel-'+slug;p.innerHTML='<div class="rh" style="--hc:'+E(r.color||'#16a34a')+'"><div class="rh-av" style="background:'+E(r.color||'#16a34a')+'18;color:'+E(r.color||'#16a34a')+'">'+E((r.name||'?')[0])+'</div><div><div style="font-size:19px;font-weight:900">'+E(r.name)+'</div><div style="font-size:12px;color:var(--muted);margin-top:3px">'+E(r.role)+' · Retention Owner</div></div><div class="rh-st">'+repStat('Accounts',r.accounts,'var(--cyan)')+repStat('Renewed',r.renewed,'var(--green)')+repStat('Booked',r.booked,'var(--amber)')+repStat('Cashed',r.cashed,'var(--blue)')+repStat('Delayed',r.delayed,'var(--red)')+repStat('Meetings',r.meetings,'var(--purple)')+'</div></div><div class="tier-grid">'+tierCards(acc,r.name)+'</div><div class="card mb"><div class="ch"><div class="ct">📌 Owner Action Summary</div><span class="b bc">Clickable</span></div><div class="action-row">'+mini('Accounts',acc,'account','var(--cyan)')+mini('Delayed Renewals',del,'deal','var(--red)')+mini('Tier Follow-Ups',tierRows,'account','var(--amber)')+'</div></div><div class="g2e"><div class="card"><div class="ch"><div class="ct">🚨 Delayed Renewals</div><span class="b br">'+del.length+'</span></div>'+smallRows(del,'deal','ownerData[\''+slug+'\'].del')+'</div><div class="card"><div class="ch"><div class="ct">⏰ Tier Follow-Ups</div><span class="b ba">'+tierRows.length+'</span></div>'+smallRows(tierRows,'account','ownerData[\''+slug+'\'].tier')+'</div></div><div class="g3"><div class="card"><div class="ch"><div class="ct">🔁 Renewed</div><span class="b bg">'+ren.length+' · '+M(rowsum(ren,'renewalValue'))+'</span></div>'+smallRows(ren,'deal','ownerData[\''+slug+'\'].ren',5)+'</div><div class="card"><div class="ch"><div class="ct">📝 Booked</div><span class="b ba">'+book.length+' · '+M(rowsum(book))+'</span></div>'+smallRows(book,'deal','ownerData[\''+slug+'\'].book',5)+'</div><div class="card"><div class="ch"><div class="ct">💵 Cashed</div><span class="b bg">'+cash.length+' · '+M(rowsum(cash))+'</span></div>'+smallRows(cash,'deal','ownerData[\''+slug+'\'].cash',5)+'</div></div><div class="card mb"><div class="ch"><div class="ct">🏢 Accounts</div><span class="b bc">'+acc.length+'</span></div><div class="tw"><table class="tbl"><thead><tr><th>Company</th><th>Status</th><th>Tier</th><th>RM Touch</th><th>CSM Touch</th><th class="c">Days</th><th class="c">Deals</th></tr></thead><tbody>'+acc.map(a=>'<tr><td>'+rl(a.companyName,a.companyUrl)+'</td><td><span class="sp '+(N(a.accountStatus).includes('churn')?'sl':'sw')+'">'+E(a.accountStatus||'—')+'</span></td><td>'+tierBadge(a.companyTier)+'</td><td>'+E(a.rmLastTouch||'—')+'</td><td>'+E(a.csmLastTouch||'—')+'</td><td class="c m">'+(a.daysSinceActivity>900?'Never':a.daysSinceActivity||0)+'</td><td class="c m">'+(a.dealsCount||0)+'</td></tr>').join('')+'</tbody></table></div></div>';box.appendChild(p);window.ownerData=window.ownerData||{};window.ownerData[slug]={acc,del,tier:tierRows,ren,book,cash,churn};});}
-function repStat(l,v,c){return '<div style="text-align:center"><div class="rh-sv" style="color:'+c+'">'+E(v??0)+'</div><div class="rh-sl">'+E(l)+'</div></div>'}
-function mini(l,rows,type,c){const key='mini_'+Object.keys(MINI_ROWS).length;MINI_ROWS[key]=rows||[];return '<div class="mini-card" onclick="openRows(\''+E(l).replace(/'/g,'&#39;')+'\', MINI_ROWS[\''+key+'\'], \''+type+'\')"><div class="mini-v" style="color:'+c+'">'+(rows||[]).length+'</div><div class="mini-l">'+E(l)+'</div></div>'}
-function tierCards(acc,ownerName){const groups={A:[],B:[],C:[],Empty:[]};acc.forEach(a=>{const t=(a.companyTier||'').toUpperCase();groups[t==='A'?'A':t==='B'?'B':t==='C'?'C':'Empty'].push(a)});return Object.entries(groups).map(([k,rows])=>'<div class="tier-card" onclick="openRows(\'Tier '+E(k)+' Accounts\', tierOpenData[\''+N(ownerName)+'-'+k+'\'], \'account\')"><div class="tier-v" style="color:'+(k==='A'?'var(--red)':k==='B'?'var(--amber)':k==='C'?'var(--blue)':'var(--muted)')+'">'+rows.length+'</div><div class="tier-l">Tier '+E(k)+'</div></div>').join('')+setTierData(ownerName,groups)}function setTierData(ownerName,groups){window.tierOpenData=window.tierOpenData||{};Object.entries(groups).forEach(([k,v])=>window.tierOpenData[N(ownerName)+'-'+k]=v);return ''}function tierBadge(t){if(!t)return '<span class="sp sa">Empty</span>';const c=t==='A'?'sl':t==='B'?'sa':'so';return '<span class="sp '+c+'">Tier '+E(t)+'</span>'}
-function go(n){TAB=n;localStorage.setItem('ret_tab',n);document.querySelectorAll('.pnl').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));document.querySelectorAll('.sbi').forEach(b=>b.classList.remove('active'));$('panel-'+n)?.classList.add('on');$('tab-'+n)?.classList.add('on');$('side-'+n)?.classList.add('active');if(n==='team'){$('side-team')?.classList.add('active');T('pageTitle','Retention · Team Overview');T('tbSub','Updated '+(D?.generatedAt||D?.lastUpdated||'')+' · Retention Command Center');}else if(n==='financial'){$('side-financial')?.classList.add('active');T('pageTitle','Retention · Financial Details');T('tbSub','Budget / booked / collected / remaining collection');}else{const id=n.replace('owner-','');const r=owners().find(x=>String(x.id)===String(id));T('pageTitle','Retention · '+(r?.name||'Owner'));T('tbSub',(r?.role||'Owner')+' page · accounts, renewals, activities and sheet metrics');}}
-function openRows(title,rows,type='deal'){rows=Array.isArray(rows)?rows:[];T('MT',title+' ('+rows.length.toLocaleString()+')');T('MD','Showing all available rows from data-retention.json.');if(!rows.length){H('MB','<div class="me">No rows found.</div>');$('MBG').classList.add('on');return;}H('MB',rows.map(r=>{const name=r.name||r.companyName||r.clientName||r.dealname||'Unnamed';const u=r.hubspotUrl||r.companyUrl;const meta=[r.companyName&&r.companyName!==name?r.companyName:null,rowTier(r),rowStatus(r),rowProduct(r),rowMonth(r)].filter(Boolean).join(' · ');const owner=[r.ownerName,r.rmOwnerName,r.csmOwnerName,r.rm,r.csm,r.owner].filter(Boolean).slice(0,2).join(' / ')||'—';const status=r.status||r.accountStatus||r.stageType||r.renewalStatusFromSheet||'—';const date=r.contractRenewalDate||r.actionDate||r.lastActivityDate||r.renewalMonth||r.timeline||'—';const amt=r.renewalValue??r.amount??r.renewalValue2026??r.upsellValue??0;return '<div class="mr"><div class="mn2">'+rl(name,u)+'<div class="mm2">'+E(meta)+'</div></div><div>'+E(owner)+'</div><div><span class="sp '+badgeClass(r)+'">'+E(status)+'</span></div><div>'+E(date)+'</div><div class="m r">'+M(amt)+'</div></div>';}).join(''));$('MBG').classList.add('on');}
-function cm(){$('MBG').classList.remove('on')}window.addEventListener('keydown',e=>{if(e.key==='Escape')cm();});
-load();
+const num = v => Number(v || 0);
+const count = rows => (rows || []).length;
+const sum = (rows, key) => (rows || []).reduce((a,r)=>a+num(r[key]),0);
+const unique = arr => [...new Set((arr || []).filter(v => v !== undefined && v !== null && String(v).trim() !== '').map(String))].sort((a,b)=>a.localeCompare(b));
+
+function sheets(){return RAW?.retentionSheets2026 || {}}
+function accounts(){return Array.isArray(sheets().accounts) ? sheets().accounts : []}
+function summary(){return sheets().summary || {}}
+function ownerSummaries(){return Array.isArray(sheets().ownerSummary) ? sheets().ownerSummary : []}
+function shortOwner(name){
+  const map = {
+    'Mohammed Faizan':'Faizan',
+    'Mohammad Jehad Al-Barqawi':'Jehad',
+    'Fadi Zanona':'Fadi',
+    'Haia Al-Zo’ubi':'Haia',
+    'Maryam Alfarra':'Maryam',
+    'Sarah Al-jarrah':'Sarah',
+    'Hatem Alawneh':'Hatem',
+    'Darshna Suresh':'Darshna'
+  };
+  return map[name] || name || 'Unassigned';
+}
+function ownerColor(name, role){
+  const colors = ['#0f7a45','#0e7490','#475569','#7c3aed','#2563eb','#be185d','#b45309','#065f46','#64748b'];
+  const key = String(name || role || '').split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+  return colors[key % colors.length];
+}
+function getOwners(){
+  const fromSummary = ownerSummaries().map(o => ({name:o.owner, role:o.role, count:o.accounts||0, color:ownerColor(o.owner,o.role)}));
+  const map = new Map();
+  fromSummary.forEach(o => {
+    if(!o.name) return;
+    const key = o.role + ':' + o.name;
+    if(!map.has(key)) map.set(key,o);
+  });
+  return [...map.values()].sort((a,b)=> a.role === b.role ? a.name.localeCompare(b.name) : (a.role === 'RM' ? -1 : 1));
+}
+function filters(){
+  return {
+    search:norm($('fltSearch').value || $('searchInput').value),
+    role:$('fltRole').value,
+    owner:$('fltOwner').value,
+    month:$('fltMonth').value,
+    monthField:$('fltMonthField').value,
+    product:$('fltProduct').value,
+    status:$('fltStatus').value,
+    location:$('fltLocation').value
+  };
+}
+function ownerMatch(row, owner){
+  if(!owner) return true;
+  return norm(row.rm) === norm(owner) || norm(row.csm) === norm(owner) || norm(row.owner) === norm(owner);
+}
+function roleMatch(row, role){
+  if(!role) return true;
+  if(role === 'RM') return !!row.rm;
+  if(role === 'CSM') return !!row.csm;
+  return true;
+}
+function monthMatch(row, month, field){
+  if(!month) return true;
+  if(field === 'renewal') return row.renewalMonth === month;
+  if(field === 'booking') return row.bookingMonth === month;
+  if(field === 'collection') return row.collectionMonth === month;
+  return row.renewalMonth === month || row.bookingMonth === month || row.collectionMonth === month;
+}
+function statusText(row){
+  return row.status || row.financialStatus || row.accountStatusForFilter || row.accountStatusLabel || 'Active';
+}
+function filteredAccounts(extraOwner){
+  const f = filters();
+  const owner = extraOwner || f.owner || CURRENT_OWNER || '';
+  return accounts().filter(r => {
+    const hay = [
+      r.clientName,r.gid,r.cleanGid,r.rm,r.csm,r.product,r.location,r.status,r.financialStatus,
+      r.renewalStatusFromSheet,r.accountStatusForFilter,r.accountStatusLabel,r.renewalMonth,r.bookingMonth,r.collectionMonth
+    ].map(norm).join(' ');
+    return (!f.search || hay.includes(f.search)) &&
+      roleMatch(r, f.role) &&
+      ownerMatch(r, owner) &&
+      monthMatch(r, f.month, f.monthField) &&
+      (!f.product || r.product === f.product) &&
+      (!f.status || statusText(r) === f.status || r.financialStatus === f.status || r.accountStatusForFilter === f.status) &&
+      (!f.location || r.location === f.location);
+  });
+}
+function metricRows(kind, baseRows){
+  const rows = baseRows || filteredAccounts();
+  if(kind === 'budget') return rows.filter(r => num(r.renewalValue2026) !== 0);
+  if(kind === 'booking') return rows.filter(r => num(r.bookingSheetValue) !== 0);
+  if(kind === 'cash') return rows.filter(r => num(r.collectedValue) !== 0);
+  if(kind === 'remaining') return rows.filter(r => num(r.remainingCollection) > 0);
+  if(kind === 'delayed') return rows.filter(r => r.status === 'Delayed');
+  if(kind === 'upcoming') return rows.filter(r => r.status === 'Upcoming');
+  if(kind === 'late') return rows.filter(r => r.status === 'Renewed Late');
+  if(kind === 'noaction') return rows.filter(r => r.financialStatus === 'No Action Yet' || r.status === 'No Action Yet');
+  if(kind === 'ontime') return rows.filter(r => r.status === 'Renewed On Time');
+  if(kind === 'sheetonly') return rows.filter(r => r.notInBudget2026);
+  return rows;
+}
+function pendingRows(){return metricRows('remaining').sort((a,b)=>num(b.remainingCollection)-num(a.remainingCollection))}
+function collectedRows(){return metricRows('cash').sort((a,b)=>num(b.collectedValue)-num(a.collectedValue))}
+function priorityRows(){
+  const rows = filteredAccounts();
+  return [
+    ...metricRows('delayed', rows),
+    ...pendingRows().filter(r => !metricRows('delayed', rows).includes(r)),
+    ...metricRows('noaction', rows).filter(r => !metricRows('delayed', rows).includes(r))
+  ];
+}
+function rowsStats(rows){
+  return {
+    count:count(rows),
+    budget:sum(rows,'renewalValue2026'),
+    booking:sum(rows,'bookingSheetValue'),
+    cash:sum(rows,'collectedValue'),
+    remaining:sum(rows,'remainingCollection'),
+    delayed:metricRows('delayed',rows).length,
+    upcoming:metricRows('upcoming',rows).length,
+    late:metricRows('late',rows).length,
+    noaction:metricRows('noaction',rows).length,
+    ontime:metricRows('ontime',rows).length
+  };
+}
+
+function initFilters(){
+  MONTHS.forEach(m => $('fltMonth').insertAdjacentHTML('beforeend', `<option value="${m}">${m}</option>`));
+  unique(accounts().map(r=>r.product)).forEach(x => $('fltProduct').insertAdjacentHTML('beforeend', `<option>${esc(x)}</option>`));
+  unique(accounts().map(r=>r.location)).forEach(x => $('fltLocation').insertAdjacentHTML('beforeend', `<option>${esc(x)}</option>`));
+  unique(accounts().flatMap(r=>[statusText(r), r.financialStatus, r.accountStatusForFilter]).filter(Boolean)).forEach(x => $('fltStatus').insertAdjacentHTML('beforeend', `<option>${esc(x)}</option>`));
+  getOwners().forEach(o => $('fltOwner').insertAdjacentHTML('beforeend', `<option value="${esc(o.name)}">${esc(shortOwner(o.name))} · ${esc(o.role)}</option>`));
+  ['fltSearch','searchInput'].forEach(id => $(id).addEventListener('input', () => render()));
+  ['fltRole','fltOwner','fltMonth','fltMonthField','fltProduct','fltStatus','fltLocation'].forEach(id => $(id).addEventListener('change', () => render()));
+}
+function clearFilters(){
+  ['fltSearch','searchInput'].forEach(id => $(id).value = '');
+  ['fltRole','fltOwner','fltMonth','fltProduct','fltStatus','fltLocation'].forEach(id => $(id).value = '');
+  $('fltMonthField').value = 'any';
+  CURRENT_OWNER = null;
+  render();
+}
+function buildNav(){
+  const owners = getOwners();
+  const rm = owners.filter(o=>o.role === 'RM');
+  const csm = owners.filter(o=>o.role === 'CSM');
+  $('rmNav').innerHTML = rm.map(o => navOwnerButton(o)).join('');
+  $('csmNav').innerHTML = csm.map(o => navOwnerButton(o)).join('');
+  document.querySelectorAll('[data-go]').forEach(btn => btn.addEventListener('click', () => setTab(btn.dataset.go)));
+  document.querySelectorAll('[data-owner]').forEach(btn => btn.addEventListener('click', () => setOwnerTab(btn.dataset.owner)));
+  $('side-budget').onclick = () => openRows('Budget Accounts', metricRows('budget'), 'sheet');
+  buildTabs(owners);
+}
+function navOwnerButton(o){
+  const delayed = accounts().filter(r => ownerMatch(r,o.name) && r.status === 'Delayed').length;
+  return `<button class="nav-btn" data-owner="${esc(o.name)}" id="side-owner-${safeId(o.name)}"><span class="nav-ico" style="color:${esc(o.color)}">●</span><span>${esc(shortOwner(o.name))}</span>${delayed ? `<span class="badge">${delayed}</span>` : ''}</button>`;
+}
+function buildTabs(owners){
+  $('tabs').innerHTML = [
+    `<button class="tab active" data-tab="dashboard">Dashboard</button>`,
+    `<button class="tab" data-tab="financial">Financial</button>`,
+    ...owners.map(o => `<button class="tab" data-owner-tab="${esc(o.name)}">${esc(shortOwner(o.name))}<span class="badge" style="position:static;margin-left:6px">${accounts().filter(r => ownerMatch(r,o.name) && r.status === 'Delayed').length}</span></button>`)
+  ].join('');
+  document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => setTab(b.dataset.tab));
+  document.querySelectorAll('[data-owner-tab]').forEach(b => b.onclick = () => setOwnerTab(b.dataset.ownerTab));
+}
+function safeId(v){return String(v||'x').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
+
+function setActiveNav(){
+  document.querySelectorAll('.nav-btn,.tab').forEach(x => x.classList.remove('active'));
+  if(CURRENT_TAB === 'dashboard') {$('side-dashboard')?.classList.add('active'); document.querySelector('[data-tab="dashboard"]')?.classList.add('active');}
+  if(CURRENT_TAB === 'financial') {$('side-financial')?.classList.add('active'); document.querySelector('[data-tab="financial"]')?.classList.add('active');}
+  if(CURRENT_TAB === 'owner'){
+    document.querySelector(`#side-owner-${safeId(CURRENT_OWNER)}`)?.classList.add('active');
+    [...document.querySelectorAll('[data-owner-tab]')].find(x => x.dataset.ownerTab === CURRENT_OWNER)?.classList.add('active');
+  }
+}
+function setTab(tab){
+  CURRENT_TAB = tab;
+  CURRENT_OWNER = null;
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.owner-panel').forEach(p => p.classList.remove('active'));
+  $('panel-' + tab)?.classList.add('active');
+  $('pageTitle').textContent = tab === 'financial' ? 'Retention Financials' : 'Retention Dashboard';
+  $('pageSub').textContent = tab === 'financial' ? 'Budget + Booking Sheet + Collection · all cards clickable' : 'Plan, prioritize, and track retention collection with ease.';
+  setActiveNav();
+  render();
+}
+function setOwnerTab(owner){
+  CURRENT_TAB = 'owner';
+  CURRENT_OWNER = owner;
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.owner-panel').forEach(p => p.classList.remove('active'));
+  const id = 'owner-panel-' + safeId(owner);
+  $(id)?.classList.add('active');
+  $('pageTitle').textContent = shortOwner(owner) + ' · Retention';
+  $('pageSub').textContent = 'Owner page · Budget + Booking + Collection';
+  setActiveNav();
+  renderOwner(owner);
+}
+
+function statCard(title, val, sub, rows, kind, dark=false, color='green'){
+  const colorMap = {green:'var(--green)', red:'var(--red)', amber:'var(--amber)', blue:'var(--blue)', purple:'var(--purple)', teal:'var(--teal)'};
+  return `<div class="card stat ${dark?'dark':''}" onclick="openRows('${esc(title)}', window.__rows['${kind}'], 'sheet')">
+    <h3>${esc(title)}</h3><div class="go">↗</div>
+    <div class="val">${esc(val)}</div>
+    <div class="sub"><span class="pill ${color}">${count(rows).toLocaleString()} rows</span>${esc(sub||'')}</div>
+  </div>`;
+}
+function renderStats(targetId, rows){
+  const st = rowsStats(rows);
+  window.__rows = window.__rows || {};
+  Object.assign(window.__rows, {
+    budget: metricRows('budget', rows), booking: metricRows('booking', rows), cash: metricRows('cash', rows), remaining: metricRows('remaining', rows),
+    delayed: metricRows('delayed', rows), upcoming: metricRows('upcoming', rows), late: metricRows('late', rows), noaction: metricRows('noaction', rows)
+  });
+  $(targetId).innerHTML = [
+    statCard('Budget Value', money(st.budget), 'renewal value', window.__rows.budget, 'budget', true, 'green'),
+    statCard('Booking Sheet', money(st.booking), 'booked from sheet', window.__rows.booking, 'booking', false, 'amber'),
+    statCard('Cash Collected', money(st.cash), 'collection sheet', window.__rows.cash, 'cash', false, 'blue'),
+    statCard('Booked Not Cash', money(st.remaining), 'remaining collection', window.__rows.remaining, 'remaining', false, 'red')
+  ].join('');
+}
+
+function renderMonthly(rows){
+  const totals = MONTHS.map(m => {
+    const r = rows.filter(x => x.renewalMonth === m || x.bookingMonth === m || x.collectionMonth === m);
+    return {
+      m,
+      budget: sum(rows.filter(x=>x.renewalMonth===m),'renewalValue2026'),
+      booking: sum(rows.filter(x=>x.bookingMonth===m),'bookingSheetValue'),
+      cash: sum(rows.filter(x=>x.collectionMonth===m),'collectedValue')
+    };
+  });
+  const max = Math.max(1, ...totals.flatMap(x => [x.budget, x.booking, x.cash]));
+  $('monthlyChart').innerHTML = totals.map(x => `
+    <div class="bar-wrap" onclick="setMonthFilter('${x.m}')">
+      <div class="bar-stack">
+        <div class="bar budget" title="Budget ${money(x.budget)}" style="height:${Math.max(4, x.budget/max*160)}px"></div>
+        <div class="bar book" title="Booking ${money(x.booking)}" style="height:${Math.max(4, x.booking/max*160)}px"></div>
+        <div class="bar cash" title="Cash ${money(x.cash)}" style="height:${Math.max(4, x.cash/max*160)}px"></div>
+      </div>
+      <div class="bar-label">${x.m[0]}</div>
+    </div>
+  `).join('');
+}
+function setMonthFilter(m){$('fltMonth').value=m; render();}
+function actionItem(title, sub, icon, rows, colorClass){
+  const key = 'act_' + title.replace(/\W+/g,'_');
+  window.__rows[key] = rows;
+  return `<div class="project-item" onclick="openRows('${esc(title)}', window.__rows['${key}'], 'sheet')">
+    <div class="project-ico ${colorClass}" style="background:var(--${colorClass}bg);color:var(--${colorClass})">${icon}</div>
+    <div><b>${esc(title)}</b><span>${esc(sub)}</span></div>
+    <span class="pill ${colorClass}">${rows.length}</span>
+  </div>`;
+}
+function renderActions(rows){
+  const delayed = metricRows('delayed', rows);
+  const remaining = metricRows('remaining', rows);
+  const noaction = metricRows('noaction', rows);
+  const upcoming = metricRows('upcoming', rows);
+  $('actionList').innerHTML = [
+    actionItem('Delayed Accounts', money(sum(delayed,'renewalValue2026'))+' budget value', '!', delayed, 'red'),
+    actionItem('Booked Not Cash', money(sum(remaining,'remainingCollection'))+' to collect', '$', remaining, 'amber'),
+    actionItem('No Action Yet', money(sum(noaction,'renewalValue2026'))+' untouched budget', '•', noaction, 'blue'),
+    actionItem('Upcoming Renewals', money(sum(upcoming,'renewalValue2026'))+' upcoming', '↗', upcoming, 'green')
+  ].join('');
+  $('riskTitle').textContent = delayed.length ? `${delayed.length} delayed accounts` : `${remaining.length} pending collections`;
+  $('riskText').textContent = delayed.length ? `${money(sum(delayed,'renewalValue2026'))} renewal value needs attention.` : `${money(sum(remaining,'remainingCollection'))} booked not cash still pending.`;
+}
+
+function ownerRowsFor(ownerName, rows){return rows.filter(r => ownerMatch(r, ownerName))}
+function buildOwnerSummary(role, rows){
+  const owners = getOwners().filter(o => o.role === role);
+  return owners.map(o => {
+    const rs = ownerRowsFor(o.name, rows);
+    const st = rowsStats(rs);
+    return { ...o, rows:rs, ...st };
+  }).filter(x => x.rows.length || !filters().owner);
+}
+function renderOwnerSummary(){
+  const rows = filteredAccounts();
+  const render = (role, bodyId, countId) => {
+    const os = buildOwnerSummary(role, rows);
+    $(countId).textContent = os.length + ' owners';
+    $(bodyId).innerHTML = os.map(o => `
+      <tr onclick="openRows('${esc(shortOwner(o.name))} Accounts', window.__ownerRows['${role}:${esc(o.name)}'], 'sheet')">
+        <td><div class="owner-row"><div class="avatar" style="background:${esc(o.color)}">${esc(shortOwner(o.name)[0])}</div><div><b>${esc(shortOwner(o.name))}</b><span>${esc(role)} · ${o.count} accounts</span></div></div></td>
+        <td class="num">${money(o.budget)}</td>
+        <td class="num">${money(o.booking)}</td>
+        <td class="num">${money(o.cash)}</td>
+        <td class="num">${money(o.remaining)}</td>
+        <td class="center"><span class="pill ${o.delayed?'red':'green'}">${o.delayed}</span></td>
+      </tr>`).join('');
+    window.__ownerRows = window.__ownerRows || {};
+    os.forEach(o => window.__ownerRows[`${role}:${o.name}`] = o.rows);
+  };
+  render('RM','rmSummaryBody','rmSummaryCount');
+  render('CSM','csmSummaryBody','csmSummaryCount');
+}
+function renderCollab(){
+  const rows = filteredAccounts();
+  const os = [...buildOwnerSummary('RM', rows), ...buildOwnerSummary('CSM', rows)]
+    .sort((a,b)=>(b.remaining+b.delayed*100000)-(a.remaining+a.delayed*100000)).slice(0,5);
+  $('collabList').innerHTML = os.map(o => `
+    <div class="small-row" onclick="setOwnerTab('${esc(o.name)}')">
+      <div class="owner-row"><div class="avatar" style="background:${esc(o.color)}">${esc(shortOwner(o.name)[0])}</div><div><b>${esc(shortOwner(o.name))}</b><span>${esc(o.role)} · ${o.delayed} delayed · ${money(o.remaining)} not cash</span></div></div>
+      <span class="pill ${o.delayed?'red':'green'}">${o.rows.length}</span>
+    </div>`).join('');
+}
+function renderProgress(rows){
+  const booking = sum(rows,'bookingSheetValue');
+  const cash = sum(rows,'collectedValue');
+  const pct = booking > 0 ? Math.min(100, Math.round(cash / booking * 100)) : 0;
+  $('progressPct').textContent = pct + '%';
+  $('progressDonut').style.setProperty('--pct', pct * 3.6 + 'deg');
+}
+
+function renderFinancialLists(rows){
+  const pending = pendingRows();
+  const collected = collectedRows();
+  $('pendingBadge').textContent = pending.length + ' · ' + money(sum(pending,'remainingCollection'));
+  $('collectedBadge').textContent = collected.length + ' · ' + money(sum(collected,'collectedValue'));
+  $('pendingList').innerHTML = smallRows(pending, 'remainingCollection', 7);
+  $('collectedList').innerHTML = smallRows(collected, 'collectedValue', 7);
+  $('ledgerBadge').textContent = rows.length + ' rows';
+  $('ledgerBody').innerHTML = rows.slice(0,250).map(r => `
+    <tr onclick="openRows('${esc(r.clientName)}', [window.__ledger['${esc(rowKey(r))}']], 'sheet')">
+      <td><b>${esc(r.clientName || 'Unnamed')}</b><br><span class="muted">${esc(r.gid || '')} ${r.notInBudget2026 ? '· Not in Budget' : ''}</span></td>
+      <td>${esc(r.rm || '—')}</td>
+      <td>${esc(r.csm || '—')}</td>
+      <td>${esc(r.product || '—')}</td>
+      <td><span class="pill ${badgeClass(r)}">${esc(statusText(r))}</span></td>
+      <td>${esc([r.renewalMonth&&'R:'+r.renewalMonth,r.bookingMonth&&'B:'+r.bookingMonth,r.collectionMonth&&'C:'+r.collectionMonth].filter(Boolean).join(' · ') || '—')}</td>
+      <td class="num">${money(r.renewalValue2026)}</td>
+      <td class="num">${money(r.bookingSheetValue)}</td>
+      <td class="num">${money(r.collectedValue)}</td>
+      <td class="num">${money(r.remainingCollection)}</td>
+    </tr>`).join('');
+  window.__ledger = {};
+  rows.forEach(r => window.__ledger[rowKey(r)] = r);
+}
+function rowKey(r){return [r.gid,r.clientName,r.product,r.rm,r.csm,r.renewalMonth,r.bookingMonth,r.collectionMonth].map(x=>String(x||'').replace(/[^a-zA-Z0-9]+/g,'_')).join('_')}
+function smallRows(rows, amountKey, limit){
+  if(!rows.length) return `<div class="small-list"><div class="muted" style="padding:18px 0">No rows found.</div></div>`;
+  return rows.slice(0,limit).map(r => `
+    <div class="small-row" onclick="openRows('${esc(r.clientName || 'Account')}', [window.__rowByKey['${esc(rowKey(r))}']], 'sheet')">
+      <div><b>${esc(r.clientName || 'Unnamed')}</b><span>${esc([r.status,r.product,r.rm&&'RM '+r.rm,r.csm&&'CSM '+r.csm].filter(Boolean).join(' · '))}</span></div>
+      <b class="num">${money(r[amountKey])}</b>
+    </div>`).join('');
+}
+
+function buildOwnerPanels(){
+  const owners = getOwners();
+  $('ownerPanels').innerHTML = owners.map(o => `
+    <section id="owner-panel-${safeId(o.name)}" class="owner-panel">
+      <div class="profile">
+        <div class="avatar" style="background:${esc(o.color)}">${esc(shortOwner(o.name)[0])}</div>
+        <div><h3>${esc(shortOwner(o.name))}</h3><p>${esc(o.role)} · Retention owner</p></div>
+        <div class="profile-stats" id="profileStats-${safeId(o.name)}"></div>
+      </div>
+      <div class="grid4" id="ownerStats-${safeId(o.name)}"></div>
+      <div style="height:16px"></div>
+      <div class="grid2">
+        <div class="card"><div class="card-head"><div><div class="card-title">Booked Not Cash</div><div class="card-sub">Owner filtered pending collection</div></div><span class="pill amber" id="ownerPendingBadge-${safeId(o.name)}">0</span></div><div class="small-list" id="ownerPending-${safeId(o.name)}"></div></div>
+        <div class="card"><div class="card-head"><div><div class="card-title">Delayed / No Action</div><div class="card-sub">Accounts that need action</div></div><span class="pill red" id="ownerRiskBadge-${safeId(o.name)}">0</span></div><div class="small-list" id="ownerRisk-${safeId(o.name)}"></div></div>
+      </div>
+      <div style="height:16px"></div>
+      <div class="card"><div class="card-head"><div><div class="card-title">Owner Account Ledger</div><div class="card-sub">Budget + Booking + Collection</div></div><span class="pill teal" id="ownerLedgerBadge-${safeId(o.name)}">0 rows</span></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Account</th><th>Product</th><th>Status</th><th>Month</th><th class="num">Budget</th><th class="num">Booking</th><th class="num">Cash</th><th class="num">Booked Not Cash</th></tr></thead><tbody id="ownerLedger-${safeId(o.name)}"></tbody></table></div></div>
+    </section>`).join('');
+}
+function renderOwner(owner){
+  const id = safeId(owner);
+  const rows = filteredAccounts(owner);
+  const st = rowsStats(rows);
+  $('profileStats-'+id).innerHTML = [
+    `<div><b>${rows.length}</b><span>Accounts</span></div>`,
+    `<div><b>${money(st.budget)}</b><span>Budget</span></div>`,
+    `<div><b>${money(st.booking)}</b><span>Booked</span></div>`,
+    `<div><b>${money(st.cash)}</b><span>Cash</span></div>`,
+    `<div><b style="color:var(--red)">${st.delayed}</b><span>Delayed</span></div>`
+  ].join('');
+  renderStats('ownerStats-'+id, rows);
+  const pending = rows.filter(r => num(r.remainingCollection)>0).sort((a,b)=>num(b.remainingCollection)-num(a.remainingCollection));
+  const risk = [...rows.filter(r=>r.status==='Delayed'), ...rows.filter(r=>r.financialStatus==='No Action Yet')].filter((v,i,a)=>a.indexOf(v)===i);
+  $('ownerPendingBadge-'+id).textContent = pending.length + ' · ' + money(sum(pending,'remainingCollection'));
+  $('ownerRiskBadge-'+id).textContent = risk.length;
+  $('ownerPending-'+id).innerHTML = smallRows(pending,'remainingCollection',7);
+  $('ownerRisk-'+id).innerHTML = smallRows(risk,'renewalValue2026',7);
+  $('ownerLedgerBadge-'+id).textContent = rows.length + ' rows';
+  $('ownerLedger-'+id).innerHTML = rows.slice(0,250).map(r => `
+    <tr onclick="openRows('${esc(r.clientName)}', [window.__rowByKey['${esc(rowKey(r))}']], 'sheet')">
+      <td><b>${esc(r.clientName || 'Unnamed')}</b><br><span class="muted">${esc(r.gid || '')}</span></td>
+      <td>${esc(r.product || '—')}</td>
+      <td><span class="pill ${badgeClass(r)}">${esc(statusText(r))}</span></td>
+      <td>${esc([r.renewalMonth&&'R:'+r.renewalMonth,r.bookingMonth&&'B:'+r.bookingMonth,r.collectionMonth&&'C:'+r.collectionMonth].filter(Boolean).join(' · ') || '—')}</td>
+      <td class="num">${money(r.renewalValue2026)}</td>
+      <td class="num">${money(r.bookingSheetValue)}</td>
+      <td class="num">${money(r.collectedValue)}</td>
+      <td class="num">${money(r.remainingCollection)}</td>
+    </tr>`).join('');
+}
+function badgeClass(r){
+  const s = statusText(r).toLowerCase();
+  if(s.includes('delayed') || s.includes('lost')) return 'red';
+  if(s.includes('late') || s.includes('pending')) return 'amber';
+  if(s.includes('cash') || s.includes('on time') || s.includes('renewed')) return 'green';
+  if(s.includes('upcoming')) return 'blue';
+  return 'teal';
+}
+
+function render(){
+  if(!RAW) return;
+  window.__rowByKey = {};
+  accounts().forEach(r => window.__rowByKey[rowKey(r)] = r);
+  const rows = filteredAccounts();
+  $('budgetCount').textContent = metricRows('budget').length;
+  renderStats('mainStats', rows);
+  renderStats('financialStats', rows);
+  renderMonthly(rows);
+  renderActions(rows);
+  renderOwnerSummary();
+  renderCollab();
+  renderProgress(rows);
+  renderFinancialLists(rows);
+  if(CURRENT_TAB === 'owner' && CURRENT_OWNER) renderOwner(CURRENT_OWNER);
+}
+
+function openRows(title, rows, type='sheet'){
+  rows = Array.isArray(rows) ? rows.filter(Boolean) : [];
+  $('modalTitle').textContent = `${title} (${rows.length.toLocaleString()})`;
+  $('modalSub').textContent = 'Showing every matching row after current filters.';
+  if(!rows.length){
+    $('modalBody').innerHTML = `<div style="padding:30px" class="muted">No rows found.</div>`;
+  } else {
+    $('modalBody').innerHTML = `<div class="modal-grid head"><div>Account</div><div>Owners</div><div>Status</div><div>Months</div><div>Product</div><div>Values</div></div>` +
+      rows.map(r => `<div class="modal-grid">
+        <div><b>${esc(r.clientName || r.companyName || r.name || 'Unnamed')}</b><br><span class="muted">${esc(r.gid || r.cleanGid || '')} ${r.notInBudget2026 ? '· Not in Budget 2026' : ''}</span></div>
+        <div>${esc([r.rm&&'RM: '+r.rm,r.csm&&'CSM: '+r.csm,r.ownerName].filter(Boolean).join(' / ') || '—')}</div>
+        <div><span class="pill ${badgeClass(r)}">${esc(statusText(r))}</span><br><span class="muted">${esc(r.financialStatus || '')}</span></div>
+        <div>${esc([r.renewalMonth&&'Renewal '+r.renewalMonth,r.bookingMonth&&'Booking '+r.bookingMonth,r.collectionMonth&&'Collection '+r.collectionMonth].filter(Boolean).join(' · ') || '—')}</div>
+        <div>${esc(r.product || '—')}<br><span class="muted">${esc(r.location || '')}</span></div>
+        <div class="num">Budget ${money(r.renewalValue2026)}<br>Booking ${money(r.bookingSheetValue)}<br>Cash ${money(r.collectedValue)}<br>Not Cash ${money(r.remainingCollection)}</div>
+      </div>`).join('');
+  }
+  $('modalBg').classList.add('active');
+}
+function closeModal(){$('modalBg').classList.remove('active')}
+function modalBackdrop(e){if(e.target.id === 'modalBg') closeModal()}
+window.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); if((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==='f'){ e.preventDefault(); $('searchInput').focus(); } });
+
+function exportCurrentCsv(){
+  const rows = filteredAccounts(CURRENT_OWNER || '');
+  const cols = ['clientName','gid','rm','csm','location','product','status','financialStatus','renewalMonth','bookingMonth','collectionMonth','renewalValue2026','bookingSheetValue','collectedValue','remainingCollection','notInBudget2026'];
+  const csv = [cols.join(','), ...rows.map(r => cols.map(c => `"${String(r[c] ?? '').replace(/"/g,'""')}"`).join(','))].join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'retention-filtered-accounts.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+async function reloadData(){
+  $('loading').classList.remove('hidden');
+  $('appContent').classList.add('hidden');
+  try{
+    const res = await fetch(DATA_URL + '?v=' + Date.now(), {cache:'no-store'});
+    if(!res.ok) throw new Error('Could not fetch data-retention.json: ' + res.status);
+    RAW = await res.json();
+    document.title = 'Talentera · Retention Dashboard';
+    $('loading').classList.add('hidden');
+    $('appContent').classList.remove('hidden');
+    initPage();
+  }catch(err){
+    $('loading').innerHTML = `<div class="error-box">Failed to load data-retention.json<br><br>${esc(err.message)}<br><br>Upload this HTML beside data-retention.json in the same repo root.</div>`;
+  }
+}
+function initPage(){
+  $('fltOwner').innerHTML = '<option value="">All owners</option>';
+  $('fltProduct').innerHTML = '<option value="">All products</option>';
+  $('fltStatus').innerHTML = '<option value="">All statuses</option>';
+  $('fltLocation').innerHTML = '<option value="">All countries</option>';
+  $('fltMonth').innerHTML = '<option value="">All months</option>';
+  initFilters();
+  buildNav();
+  buildOwnerPanels();
+  const s = summary();
+  $('pageSub').textContent = `Budget + Booking Sheet + Collection · ${accounts().length.toLocaleString()} accounts · updated ${new Date(RAW.lastUpdated || RAW.generatedAt || Date.now()).toLocaleDateString()}`;
+  render();
+}
+reloadData();
 </script>
 </body>
 </html>
