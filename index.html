@@ -734,12 +734,12 @@ a{color:inherit;text-decoration:none}
           <div class="card">
             <div class="card-head"><div><div class="card-title">Booked / Pending Collection</div><div class="card-sub">Uses remainingCollection / Booked Not Cash only</div></div><span class="pill amber" id="pendingBadge">0</span></div>
             <div class="small-list" id="pendingList"></div>
-            <button class="more" onclick="openRows('Booked / Pending Collection', pendingRows(), 'sheet')">View all rows →</button>
+            <button class="more" onclick="openRows('Booked / Pending Collection', pendingRows(filteredAccounts()), 'sheet')">View all rows →</button>
           </div>
           <div class="card">
             <div class="card-head"><div><div class="card-title">Collected / Cashed</div><div class="card-sub">Uses Collection sheet cash values</div></div><span class="pill green" id="collectedBadge">0</span></div>
             <div class="small-list" id="collectedList"></div>
-            <button class="more" onclick="openRows('Collected / Cashed', collectedRows(), 'sheet')">View all rows →</button>
+            <button class="more" onclick="openRows('Collected / Cashed', collectedRows(filteredAccounts()), 'sheet')">View all rows →</button>
           </div>
         </div>
 
@@ -789,8 +789,48 @@ const sum = (rows, key) => (rows || []).reduce((a,r)=>a+num(r[key]),0);
 const unique = arr => [...new Set((arr || []).filter(v => v !== undefined && v !== null && String(v).trim() !== '').map(String))].sort((a,b)=>a.localeCompare(b));
 
 function sheets(){return RAW?.retentionSheets2026 || {}}
-function accounts(){return Array.isArray(sheets().accounts) ? sheets().accounts : []}
-function summary(){return sheets().summary || {}}
+
+let __accountsCacheSource = null;
+let __accountsCache = null;
+function cleanMoneyForCompare(v){return Math.round(Number(v || 0) * 100) / 100}
+function cleanNameForCompare(v){return String(v || '').trim().toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9؀-ۿ]+/g,' ').replace(/\s+/g,' ').trim()}
+function cleanGidForCompare(v){return String(v || '').replace(/[^0-9a-zA-Z]/g,'').trim().toLowerCase()}
+function accountIdentityKey(r){return cleanGidForCompare(r.gid || r.cleanGid) + '|' + cleanNameForCompare(r.clientName)}
+function isDuplicateSheetOnlyRow(row, nonSheetRows){
+  if(!row || !row.notInBudget2026) return false;
+  const key = accountIdentityKey(row);
+  if(!key || key === '|') return false;
+  const booking = cleanMoneyForCompare(row.bookingSheetValue);
+  const cash = cleanMoneyForCompare(row.collectedValue);
+  return nonSheetRows.some(base =>
+    accountIdentityKey(base) === key &&
+    cleanMoneyForCompare(base.bookingSheetValue) === booking &&
+    cleanMoneyForCompare(base.collectedValue) === cash &&
+    (Math.abs(booking) > 0 || Math.abs(cash) > 0)
+  );
+}
+function accounts(){
+  const src = Array.isArray(sheets().accounts) ? sheets().accounts : [];
+  if(__accountsCacheSource === src && __accountsCache) return __accountsCache;
+  const nonSheetRows = src.filter(r => !r.notInBudget2026);
+  __accountsCache = src.filter(r => !isDuplicateSheetOnlyRow(r, nonSheetRows));
+  __accountsCacheSource = src;
+  return __accountsCache;
+}
+function summary(){
+  const base = sheets().summary || {};
+  const rows = accounts();
+  return {
+    ...base,
+    totalAccounts: rows.length,
+    totalRenewalValue: sum(rows,'renewalValue2026'),
+    totalBookingSheetValue: sum(rows,'bookingSheetValue'),
+    totalBookedValue: sum(rows,'bookingSheetValue'),
+    totalCollectedValue: sum(rows,'collectedValue'),
+    remainingCollection: sum(rows,'remainingCollection'),
+    totalBookedNotCashValue: sum(rows,'remainingCollection')
+  };
+}
 function ownerSummaries(){return Array.isArray(sheets().ownerSummary) ? sheets().ownerSummary : []}
 function shortOwner(name){
   const map = {
@@ -1568,22 +1608,26 @@ function renderFinancialStats(targetId, rows){
   ].join('');
 }
 
+function safeRenderBlock(name, fn){
+  try { fn(); }
+  catch (err) { console.error('Render block failed:', name, err); }
+}
 function render(){
   if(!RAW) return;
   window.__rowByKey = {};
   accounts().forEach(r => window.__rowByKey[rowKey(r)] = r);
   const rows = filteredAccounts();
   $('budgetCount').textContent = metricRows('budget').length;
-  renderOperationalDashboard();
-  renderFinancialStats('teamFinancialStats', rows);
-  renderFinancialStats('financialStats', rows);
-  renderMonthly(rows);
-  renderActions(rows);
-  renderOwnerSummary();
-  renderCollab();
-  renderProgress(rows);
-  renderFinancialLists(rows);
-  if(CURRENT_TAB === 'owner' && CURRENT_OWNER) renderOwner(CURRENT_OWNER);
+  safeRenderBlock('operational dashboard', () => renderOperationalDashboard());
+  safeRenderBlock('team financial stats', () => renderFinancialStats('teamFinancialStats', rows));
+  safeRenderBlock('financial stats', () => renderFinancialStats('financialStats', rows));
+  safeRenderBlock('monthly chart', () => renderMonthly(rows));
+  safeRenderBlock('financial actions', () => renderActions(rows));
+  safeRenderBlock('owner financial summary', () => renderOwnerSummary());
+  safeRenderBlock('owner focus', () => renderCollab());
+  safeRenderBlock('collection progress', () => renderProgress(rows));
+  safeRenderBlock('financial lists', () => renderFinancialLists(rows));
+  if(CURRENT_TAB === 'owner' && CURRENT_OWNER) safeRenderBlock('owner page', () => renderOwner(CURRENT_OWNER));
 }
 
 function openRows(title, rows, type='sheet'){
