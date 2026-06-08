@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Talentera · Retention Dashboard</title>
+<title>Talentera · Retention Command Center</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -362,6 +362,39 @@ a{color:inherit;text-decoration:none}
   .grid4{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.hero-actions{flex-wrap:wrap}.primary,.outline{height:48px}
   .chart{gap:8px}.bar{width:32%}.modal-grid{grid-template-columns:1fr}.modal-grid.head{display:none}.modal-grid>div{border-right:0}
 }
+
+/* Added retention operations layer */
+.ops-grid{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:16px}
+.ops-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 18px 18px}
+.ops-kpi{background:#f8faf9;border:1px solid var(--line);border-radius:18px;padding:14px;cursor:pointer;transition:.15s}
+.ops-kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow2)}
+.ops-kpi b{display:block;font-size:24px;font-weight:950;letter-spacing:-.06em}.ops-kpi span{font-size:10px;text-transform:uppercase;color:var(--muted);font-weight:950;letter-spacing:.08em}.ops-kpi small{display:block;margin-top:4px;color:var(--muted);font-weight:750}
+.health-bars{display:grid;gap:12px;padding:0 18px 18px}.health-row{cursor:pointer}.health-row .topline{display:flex;justify-content:space-between;gap:12px;font-size:13px;font-weight:850;margin-bottom:6px}.health-row .track{height:9px;background:#eef3ef;border-radius:99px;overflow:hidden}.health-row .fill{height:100%;background:linear-gradient(90deg,var(--green),#57bd82);border-radius:99px}
+.ops-table .tbl td{vertical-align:middle}.metric-pill{display:inline-flex;align-items:center;gap:6px;height:26px;border-radius:999px;padding:0 9px;font-size:11px;font-weight:900;background:#f8faf9;border:1px solid var(--line)}
+.compact-card{min-height:0}.compact-card .small-list{max-height:340px;overflow:auto}.section-gap{height:16px}
+.month-list{display:grid;gap:8px;padding:0 18px 18px}.month-row{display:grid;grid-template-columns:88px 1fr auto;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);background:#fff;border-radius:16px;cursor:pointer}.month-row:hover{background:#f8fbf9}.month-row b{font-size:13px}.month-row .line{height:8px;background:#eef3ef;border-radius:99px;overflow:hidden}.month-row .line span{display:block;height:100%;background:var(--green);border-radius:99px}.month-row small{color:var(--muted);font-weight:800}
+.owner-ops-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:16px 0}.owner-mini{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:var(--shadow2);cursor:pointer}.owner-mini b{font-size:26px;font-weight:950;letter-spacing:-.06em}.owner-mini span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;font-weight:950;letter-spacing:.09em;margin-top:5px}
+@media(max-width:1200px){.ops-grid{grid-template-columns:1fr}.owner-ops-grid{grid-template-columns:repeat(2,1fr)}}
+
+
+/* Full retention restore additions */
+.section-title{display:flex;align-items:end;justify-content:space-between;margin:18px 0 12px}
+.section-title h3{font-size:16px;font-weight:950;color:var(--ink)}
+.section-title p{font-size:12px;color:var(--muted);font-weight:700;margin-top:3px}
+.tier-card-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.tier-card{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.78);padding:14px 14px;min-height:108px;box-shadow:var(--shadow2);cursor:pointer;transition:.18s ease}
+.tier-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.tier-card .topline{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.tier-card h4{font-size:13px;font-weight:950;letter-spacing:-.01em}
+.tier-card .big{font-size:28px;font-weight:950;line-height:1;color:var(--ink);margin:4px 0 7px}
+.tier-card .meta{display:flex;gap:7px;flex-wrap:wrap;font-size:10px;font-weight:900;color:var(--muted)}
+.owner-tier-line{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}
+.owner-tier-line .tier-card{min-height:96px}
+.smart-action-list{display:flex;flex-direction:column;gap:10px}
+.smart-action-list .project-item{min-height:70px}
+@media(max-width:1100px){.tier-card-grid,.owner-tier-line{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.tier-card-grid,.owner-tier-line{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -415,11 +448,11 @@ a{color:inherit;text-decoration:none}
 
     <section class="hero">
       <div>
-        <h2 id="pageTitle">Retention Dashboard</h2>
+        <h2 id="pageTitle">Retention Command Center</h2>
         <p id="pageSub">Budget + Booking Sheet + Collection · filtered view</p>
       </div>
       <div class="hero-actions">
-        <button class="primary" onclick="setTab('financial')"><span>+</span> Financial View</button>
+        <button class="primary" onclick="setTab('financial')"><span>+</span> Open Financial Tab</button>
         <button class="outline" onclick="openRows('All Filtered Accounts', filteredAccounts(), 'sheet')">Open Data</button>
       </div>
     </section>
@@ -450,22 +483,100 @@ a{color:inherit;text-decoration:none}
       <section id="panel-dashboard" class="panel active">
         <div class="grid4" id="mainStats"></div>
 
+        <div class="section-title">
+          <div><h3>Team Financial Snapshot</h3><p>Budget + Booking Sheet + Collection reflected on the overview using the same filters.</p></div>
+          <button class="pill green" onclick="setTab('financial')">Open Financial →</button>
+        </div>
+        <div class="grid4" id="teamFinancialStats"></div>
+
+        <div class="section-gap"></div>
+        <div class="ops-grid">
+          <div class="card compact-card">
+            <div class="card-head"><div><div class="card-title">Activity Performance</div><div class="card-sub">HubSpot retention activity · Yesterday / MTD / YTD</div></div><span class="pill green">Operations</span></div>
+            <div class="ops-kpis" id="activityKpis"></div>
+          </div>
+          <div class="card compact-card">
+            <div class="card-head"><div><div class="card-title">Coverage Health</div><div class="card-sub">Connected calls & completed meetings</div></div><button class="pill teal" onclick="openRows('No Activity 30D', opRows('noActivity'), 'ops')">Open</button></div>
+            <div class="health-bars" id="coverageHealth"></div>
+          </div>
+          <div class="card compact-card">
+            <div class="card-head"><div><div class="card-title">Priority Actions</div><div class="card-sub">Operational SLA and renewal alerts</div></div><button class="pill red" onclick="openRows('All Operational Alerts', opRows('allAlerts'), 'ops')">All</button></div>
+            <div class="project-list" id="opsActionList"></div>
+          </div>
+        </div>
+
+        <div class="section-gap"></div>
+        <div class="grid2">
+          <div class="card ops-table">
+            <div class="card-head"><div><div class="card-title">Rep Performance</div><div class="card-sub">RM / CSM account activity, delayed, no-contact and tier followups</div></div><span class="pill teal" id="repPerfBadge">0 reps</span></div>
+            <div class="table-wrap"><table class="tbl"><thead><tr><th>Owner</th><th class="center">Role</th><th class="center">Accounts</th><th class="center">Calls</th><th class="center">Meetings</th><th class="center">Delayed</th><th class="center">Tier Due</th></tr></thead><tbody id="repPerformanceBody"></tbody></table></div>
+          </div>
+          <div class="card ops-table">
+            <div class="card-head"><div><div class="card-title">Tier Follow-up Summary</div><div class="card-sub">Tier A/B/C cadence due for RM and CSM</div></div><span class="pill purple" id="tierSummaryBadge">0 due</span></div>
+            <div class="table-wrap"><table class="tbl"><thead><tr><th>Tier</th><th class="center">Accounts</th><th class="center">RM Due</th><th class="center">CSM Due</th><th class="center">Total Due</th><th>Cadence</th></tr></thead><tbody id="tierSummaryBody"></tbody></table></div>
+          </div>
+        </div>
+
+        <div class="section-gap"></div>
+        <div class="grid2">
+          <div class="card compact-card">
+            <div class="card-head"><div><div class="card-title">Tier A/B/C & No Tier Distribution</div><div class="card-sub">Clickable account coverage by tier, including missing tier accounts.</div></div><span class="pill purple" id="tierDistributionBadge">0 accounts</span></div>
+            <div class="tier-card-grid" id="tierDistributionCards"></div>
+          </div>
+          <div class="card compact-card">
+            <div class="card-head"><div><div class="card-title">Smart Actions</div><div class="card-sub">Financial + operational actions in one manager queue.</div></div><button class="pill red" onclick="openRows('Smart Action Queue', smartActionRows(), 'ops')">Open all</button></div>
+            <div class="smart-action-list" id="smartActionsList"></div>
+          </div>
+        </div>
+
+        <div class="section-gap"></div>
+        <div class="grid2">
+          <div class="card compact-card">
+            <div class="card-head"><div><div class="card-title">Owner Focus</div><div class="card-sub">Top RM / CSM by delayed value and booked-not-cash risk</div></div><span class="pill teal">Filtered</span></div>
+            <div class="small-list" id="collabList"></div>
+          </div>
+          <div class="card compact-card">
+            <div class="card-head"><div><div class="card-title">Financial Risk Summary</div><div class="card-sub">Auto summary from delayed and pending collection rows</div></div><button class="pill amber" onclick="setTab('financial')">Financial</button></div>
+            <div style="padding:6px 0 10px"><h3 id="riskTitle" style="font-size:22px;font-weight:950;letter-spacing:-.03em">—</h3><p id="riskText" class="muted" style="margin-top:8px;font-size:13px;font-weight:700;line-height:1.5">—</p></div>
+          </div>
+        </div>
+
+        <div class="section-gap"></div>
+        <div class="grid2">
+          <div class="card compact-card">
+            <div class="card-head"><div><div class="card-title">Renewal Pipeline by Month</div><div class="card-sub">HubSpot renewal pipeline: due / renewed / delayed / upcoming</div></div><button class="pill green" onclick="openRows('Renewal Pipeline', RAW.renewalPipeline || [], 'ops')">Open</button></div>
+            <div class="month-list" id="renewalPipelineList"></div>
+          </div>
+          <div class="card compact-card">
+            <div class="card-head"><div><div class="card-title">Delayed Renewals</div><div class="card-sub">Passed renewal date with no same-company booked/cashed stage movement</div></div><span class="pill red" id="delayedOpsBadge">0</span></div>
+            <div class="small-list" id="delayedOpsList"></div>
+            <button class="more" onclick="openRows('Delayed Renewals', opRows('delayedRenewals'), 'ops')">View all delayed →</button>
+          </div>
+        </div>
+
+        <div class="section-gap"></div>
+        <div class="card ops-table">
+          <div class="card-head"><div><div class="card-title">Account Health Ledger</div><div class="card-sub">Retention accounts from HubSpot: tier, owners, activity and deal count</div></div><span class="pill teal" id="accountHealthBadge">0 accounts</span></div>
+          <div class="table-wrap"><table class="tbl"><thead><tr><th>Account</th><th>RM</th><th>CSM</th><th class="center">Tier</th><th class="center">Status</th><th class="center">Last Activity</th><th class="center">Last Meeting</th><th class="center">Deals</th></tr></thead><tbody id="accountHealthBody"></tbody></table></div>
+        </div>
+      </section>
+
+      <section id="panel-financial" class="panel">
+        <div class="grid4" id="financialStats"></div>
+
         <div style="height:16px"></div>
         <div class="grid3">
           <div class="card">
-            <div class="card-head"><div><div class="card-title">Monthly Analytics</div><div class="card-sub">Budget vs Booking vs Collection</div></div><span class="pill green">2026</span></div>
+            <div class="card-head"><div><div class="card-title">Monthly Financial Analytics</div><div class="card-sub">Budget vs Booking vs Collection</div></div><span class="pill green">2026</span></div>
             <div class="chart" id="monthlyChart"></div>
           </div>
-          <div class="card reminder">
-            <div>
-              <div class="card-title">Retention Reminder</div>
-              <h3 id="riskTitle">—</h3>
-              <p id="riskText">—</p>
-            </div>
-            <button onclick="openRows('Priority Accounts', priorityRows(), 'sheet')">Open Priority</button>
-          </div>
           <div class="card">
-            <div class="card-head"><div><div class="card-title">Actions</div><div class="card-sub">Clickable retention lists</div></div><button class="pill green" onclick="openRows('All Actions', priorityRows(), 'sheet')">+ Open</button></div>
+            <div class="card-head" style="padding-bottom:8px"><div><div class="card-title">Collection Progress</div><div class="card-sub">Cash collected ÷ booking sheet</div></div></div>
+            <div class="donut" id="progressDonut" style="--pct:0deg"><div class="donut-in"><b id="progressPct">0%</b><span>Collected</span></div></div>
+            <div class="legend"><span><i style="background:var(--green)"></i>Collected</span><span><i style="background:#e8eee9"></i>Remaining</span></div>
+          </div>
+          <div class="card compact-card">
+            <div class="card-head"><div><div class="card-title">Financial Actions</div><div class="card-sub">Clickable sheet lists</div></div><button class="pill green" onclick="openRows('All Financial Actions', priorityRows(), 'sheet')">Open</button></div>
             <div class="project-list" id="actionList"></div>
           </div>
         </div>
@@ -473,31 +584,14 @@ a{color:inherit;text-decoration:none}
         <div style="height:16px"></div>
         <div class="grid2">
           <div class="card">
-            <div class="card-head"><div><div class="card-title">Owner Summary · RM</div><div class="card-sub">Owner-level counts; filtered by current controls</div></div><span class="pill teal" id="rmSummaryCount">0 owners</span></div>
+            <div class="card-head"><div><div class="card-title">Owner Financial Summary · RM</div><div class="card-sub">Sheet owner-level counts; filtered by current controls</div></div><span class="pill teal" id="rmSummaryCount">0 owners</span></div>
             <div class="table-wrap"><table class="tbl"><thead><tr><th>Owner</th><th class="num">Budget</th><th class="num">Booking</th><th class="num">Cash</th><th class="num">Booked Not Cash</th><th class="center">Delayed</th></tr></thead><tbody id="rmSummaryBody"></tbody></table></div>
           </div>
           <div class="card">
-            <div class="card-head"><div><div class="card-title">Owner Summary · CSM</div><div class="card-sub">Same accounts may appear under RM and CSM</div></div><span class="pill purple" id="csmSummaryCount">0 owners</span></div>
+            <div class="card-head"><div><div class="card-title">Owner Financial Summary · CSM</div><div class="card-sub">Same account can appear under RM and CSM</div></div><span class="pill purple" id="csmSummaryCount">0 owners</span></div>
             <div class="table-wrap"><table class="tbl"><thead><tr><th>Owner</th><th class="num">Budget</th><th class="num">Booking</th><th class="num">Cash</th><th class="num">Booked Not Cash</th><th class="center">Delayed</th></tr></thead><tbody id="csmSummaryBody"></tbody></table></div>
           </div>
         </div>
-
-        <div style="height:16px"></div>
-        <div class="grid2">
-          <div class="card">
-            <div class="card-head"><div><div class="card-title">Team Collaboration</div><div class="card-sub">Top owners by booked not cash / delayed load</div></div><button class="pill green" onclick="setTab('financial')">Financial</button></div>
-            <div class="small-list" id="collabList"></div>
-          </div>
-          <div class="card donut-card">
-            <div class="card-head" style="padding:0 0 8px"><div><div class="card-title">Collection Progress</div><div class="card-sub">Cash collected ÷ booking sheet</div></div></div>
-            <div class="donut" id="progressDonut" style="--pct:0deg"><div class="donut-in"><b id="progressPct">0%</b><span>Collected</span></div></div>
-            <div class="legend"><span><i style="background:var(--green)"></i>Collected</span><span><i style="background:#e8eee9"></i>Remaining</span></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="panel-financial" class="panel">
-        <div class="grid4" id="financialStats"></div>
 
         <div style="height:16px"></div>
         <div class="grid2">
@@ -748,7 +842,7 @@ function setOwnerTab(owner){
   const id = 'owner-panel-' + safeId(owner);
   $(id)?.classList.add('active');
   $('pageTitle').textContent = shortOwner(owner) + ' · Retention';
-  $('pageSub').textContent = 'Owner page · Budget + Booking + Collection';
+  $('pageSub').textContent = 'Owner page · calls, meetings, tiers, follow-ups + Budget / Booking / Collection';
   setActiveNav();
   renderOwner(owner);
 }
@@ -913,11 +1007,18 @@ function buildOwnerPanels(){
         <div><h3>${esc(shortOwner(o.name))}</h3><p>${esc(o.role)} · Retention owner</p></div>
         <div class="profile-stats" id="profileStats-${safeId(o.name)}"></div>
       </div>
+      <div class="owner-ops-grid" id="ownerOpsStats-${safeId(o.name)}"></div>
+      <div class="owner-tier-line" id="ownerTierMix-${safeId(o.name)}"></div>
       <div class="grid4" id="ownerStats-${safeId(o.name)}"></div>
       <div style="height:16px"></div>
       <div class="grid2">
+        <div class="card"><div class="card-head"><div><div class="card-title">Operational Follow-ups</div><div class="card-sub">Tier followups, no contact, no meeting, renewal attention</div></div><span class="pill red" id="ownerOpsBadge-${safeId(o.name)}">0</span></div><div class="small-list" id="ownerOpsList-${safeId(o.name)}"></div></div>
         <div class="card"><div class="card-head"><div><div class="card-title">Booked Not Cash</div><div class="card-sub">Owner filtered pending collection</div></div><span class="pill amber" id="ownerPendingBadge-${safeId(o.name)}">0</span></div><div class="small-list" id="ownerPending-${safeId(o.name)}"></div></div>
-        <div class="card"><div class="card-head"><div><div class="card-title">Delayed / No Action</div><div class="card-sub">Accounts that need action</div></div><span class="pill red" id="ownerRiskBadge-${safeId(o.name)}">0</span></div><div class="small-list" id="ownerRisk-${safeId(o.name)}"></div></div>
+      </div>
+      <div style="height:16px"></div>
+      <div class="grid2">
+        <div class="card"><div class="card-head"><div><div class="card-title">Delayed / No Action</div><div class="card-sub">Financial sheet accounts that need action</div></div><span class="pill red" id="ownerRiskBadge-${safeId(o.name)}">0</span></div><div class="small-list" id="ownerRisk-${safeId(o.name)}"></div></div>
+        <div class="card"><div class="card-head"><div><div class="card-title">HubSpot Account Health</div><div class="card-sub">Owner retention accounts and activity gaps</div></div><span class="pill teal" id="ownerHealthBadge-${safeId(o.name)}">0</span></div><div class="small-list" id="ownerHealth-${safeId(o.name)}"></div></div>
       </div>
       <div style="height:16px"></div>
       <div class="card"><div class="card-head"><div><div class="card-title">Owner Account Ledger</div><div class="card-sub">Budget + Booking + Collection</div></div><span class="pill teal" id="ownerLedgerBadge-${safeId(o.name)}">0 rows</span></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Account</th><th>Product</th><th>Status</th><th>Month</th><th class="num">Budget</th><th class="num">Booking</th><th class="num">Cash</th><th class="num">Booked Not Cash</th></tr></thead><tbody id="ownerLedger-${safeId(o.name)}"></tbody></table></div></div>
@@ -934,7 +1035,9 @@ function renderOwner(owner){
     `<div><b>${money(st.cash)}</b><span>Cash</span></div>`,
     `<div><b style="color:var(--red)">${st.delayed}</b><span>Delayed</span></div>`
   ].join('');
-  renderStats('ownerStats-'+id, rows);
+  renderOwnerOperational(owner);
+  renderOwnerTierBreakdown(owner);
+  renderFinancialStats('ownerStats-'+id, rows);
   const pending = rows.filter(r => num(r.remainingCollection)>0).sort((a,b)=>num(b.remainingCollection)-num(a.remainingCollection));
   const risk = [...rows.filter(r=>r.status==='Delayed'), ...rows.filter(r=>r.financialStatus==='No Action Yet')].filter((v,i,a)=>a.indexOf(v)===i);
   $('ownerPendingBadge-'+id).textContent = pending.length + ' · ' + money(sum(pending,'remainingCollection'));
@@ -963,14 +1066,349 @@ function badgeClass(r){
   return 'teal';
 }
 
+
+function topSummary(){return RAW?.summary || {}}
+function team(){return RAW?.team || {}}
+function opRows(kind){
+  const alerts = RAW?.alerts || {};
+  const cov = RAW?.coverageDetails || {};
+  const tier = RAW?.tierFollowup || {};
+  const map = {
+    retentionAccounts: RAW?.accounts || [],
+    activeAccounts: RAW?.accountsSplit?.active || (RAW?.accounts || []).filter(r => norm(r.accountStatus) === 'active'),
+    churnedAccounts: RAW?.accountsSplit?.churned || (RAW?.accounts || []).filter(r => norm(r.accountStatus) === 'churned'),
+    delayedRenewals: RAW?.delayedRenewals || alerts.delayedRenewals || [],
+    renewalPipeline: RAW?.renewalPipeline || [],
+    renewalAttention: RAW?.renewalAttention || [],
+    noActivity: alerts.noActivity || cov.noActivity30 || [],
+    noMeeting: alerts.noMeeting || cov.noMeeting90 || [],
+    tierFollowups: tier.all || alerts.tierFollowups || [],
+    allAlerts: alerts.all || [],
+    calls: RAW?.activityDetails?.calls || [],
+    meetings: RAW?.activityDetails?.meetings || [],
+    renewedDeals: RAW?.dealsSplit?.renewed || RAW?.renewalDeals || [],
+    bookedDeals: RAW?.dealsSplit?.booked || [],
+    cashedDeals: RAW?.dealsSplit?.cashed || [],
+    churnDeals: RAW?.dealsSplit?.churn || []
+  };
+  return filteredOps(map[kind] || []);
+}
+function ownerNamesForOpRow(r){
+  return [r.ownerName,r.owner,r.name,r.rmOwnerName,r.csmOwnerName,r.rm,r.csm]
+    .filter(Boolean).map(String);
+}
+function opOwnerMatch(r, owner){
+  if(!owner) return true;
+  const no = norm(owner);
+  return ownerNamesForOpRow(r).some(x => norm(x) === no || norm(shortOwner(x)) === no);
+}
+function opRoleMatch(r, role){
+  if(!role) return true;
+  const roleValue = norm(r.role || r.ownerRole || '');
+  if(roleValue === norm(role)) return true;
+  if(role === 'RM') return !!(r.rmOwnerName || r.rmOwnerId || r.rm);
+  if(role === 'CSM') return !!(r.csmOwnerName || r.csmOwnerId || r.csm);
+  return true;
+}
+function opSearchMatch(r, q){
+  if(!q) return true;
+  const hay = [
+    r.companyName,r.clientName,r.name,r.dealName,r.ownerName,r.rmOwnerName,r.csmOwnerName,r.rm,r.csm,
+    r.accountStatus,r.companyTier,r.tierLabel,r.status,r.alert,r.message,r.reason,r.subject,r.description,r.product,r.location
+  ].map(norm).join(' ');
+  return hay.includes(q);
+}
+function filteredOps(rows){
+  const f = filters();
+  const owner = f.owner || CURRENT_OWNER || '';
+  return (rows || []).filter(r =>
+    opOwnerMatch(r, owner) && opRoleMatch(r, f.role) && opSearchMatch(r, f.search)
+  );
+}
+function ownerDetailByName(owner){
+  const values = Object.values(RAW?.ownerDetails || {});
+  return values.find(d => norm(d.name) === norm(owner) || norm(shortOwner(d.name)) === norm(owner)) || null;
+}
+function opValue(row){return num(row.renewalValue || row.amount || row.renewedAmt || row.bookedAmt || row.cashedAmt || row.delayedAmt || 0)}
+function opCard(title, value, sub, rows, key, dark=false, color='green'){
+  window.__rows = window.__rows || {};
+  window.__rows[key] = rows || [];
+  return `<div class="card stat ${dark?'dark':''}" onclick="openRows('${esc(title)}', window.__rows['${key}'], 'ops')">
+    <h3>${esc(title)}</h3><div class="go">↗</div>
+    <div class="val">${esc(value)}</div>
+    <div class="sub"><span class="pill ${color}">${(rows||[]).length.toLocaleString()} rows</span>${esc(sub||'')}</div>
+  </div>`;
+}
+function renderOverviewStats(){
+  const s = topSummary();
+  const active = opRows('activeAccounts');
+  const delayed = opRows('delayedRenewals');
+  const tier = opRows('tierFollowups');
+  const noActivity = opRows('noActivity');
+  $('mainStats').innerHTML = [
+    opCard('Active Accounts', String(active.length || s.activeAccounts || 0), 'retention accounts', active, 'activeAccounts', true, 'green'),
+    opCard('Delayed Renewals', String(delayed.length || s.delayedRenewals || 0), money((delayed||[]).reduce((a,r)=>a+opValue(r),0))+' value', delayed, 'delayedOps', false, 'red'),
+    opCard('Tier Follow-ups', String(tier.length || s.tierFollowups || 0), 'RM / CSM cadence due', tier, 'tierOps', false, 'purple'),
+    opCard('No Activity 30D', String(noActivity.length), 'accounts need touch', noActivity, 'noActivityOps', false, 'amber')
+  ].join('');
+}
+function renderActivityKpis(){
+  const k = RAW?.kpis || RAW?.kpi || {};
+  const periods = [
+    ['Yesterday', k.yesterday || k.yest || {}],
+    ['MTD', k.mtd || {}],
+    ['YTD', k.ytd || {}]
+  ];
+  $('activityKpis').innerHTML = periods.map(([label,m],i) => {
+    const key = 'activity_'+label;
+    window.__rows[key] = [...opRows('calls'), ...opRows('meetings')];
+    return `<div class="ops-kpi" onclick="openRows('${label} Activity Rows', window.__rows['${key}'], 'ops')"><span>${esc(label)}</span><b>${num(m.calls).toLocaleString()} / ${num(m.meetings).toLocaleString()}</b><small>Calls / meetings · renewed ${num(m.renewed)} · delayed ${num(m.delayed)}</small></div>`;
+  }).join('');
+}
+function coverageRow(label, pct, rows, key){
+  window.__rows[key]=rows||[];
+  const v = Math.max(0, Math.min(100, num(pct)));
+  return `<div class="health-row" onclick="openRows('${esc(label)}', window.__rows['${key}'], 'ops')"><div class="topline"><span>${esc(label)}</span><b>${v}%</b></div><div class="track"><div class="fill" style="width:${v}%"></div></div></div>`;
+}
+function renderCoverageHealth(){
+  const c = RAW?.coverageDetails || {};
+  $('coverageHealth').innerHTML = [
+    coverageRow('Call coverage', c.callCoverage || 0, c.noCall || [], 'noCall'),
+    coverageRow('Meeting coverage', c.meetingCoverage || 0, c.noMeeting || [], 'noMeeting'),
+    coverageRow('RM touch coverage', c.rmTouchCoverage || 0, c.noRmTouch || [], 'noRmTouch'),
+    coverageRow('CSM touch coverage', c.csmTouchCoverage || 0, c.noCsmTouch || [], 'noCsmTouch')
+  ].join('');
+}
+function opsActionItem(title, sub, icon, rows, colorClass){
+  const key='ops_'+title.replace(/\W+/g,'_');
+  window.__rows[key]=rows||[];
+  return `<div class="project-item" onclick="openRows('${esc(title)}', window.__rows['${key}'], 'ops')">
+    <div class="project-ico ${colorClass}" style="background:var(--${colorClass}bg);color:var(--${colorClass})">${icon}</div>
+    <div><b>${esc(title)}</b><span>${esc(sub)}</span></div><span class="pill ${colorClass}">${(rows||[]).length}</span></div>`;
+}
+function renderOperationalActions(){
+  const delayed = opRows('delayedRenewals');
+  const noAct = opRows('noActivity');
+  const noMeet = opRows('noMeeting');
+  const tier = opRows('tierFollowups');
+  $('opsActionList').innerHTML = [
+    opsActionItem('Delayed Renewals', money(delayed.reduce((a,r)=>a+opValue(r),0))+' delayed value', '!', delayed, 'red'),
+    opsActionItem('Tier Follow-ups Due', 'A/B/C cadence follow-up', '●', tier, 'purple'),
+    opsActionItem('No Activity 30D', 'No RM/CSM touch recently', '↺', noAct, 'amber'),
+    opsActionItem('No Meeting 90D', 'No completed meeting recently', '☉', noMeet, 'blue')
+  ].join('');
+}
+
+function tierClass(tier){
+  const t = String(tier || '').toUpperCase();
+  if(t === 'A') return 'red';
+  if(t === 'B') return 'amber';
+  if(t === 'C') return 'green';
+  return 'teal';
+}
+function tierLabel(tier){
+  const t = String(tier || '').toUpperCase();
+  return t === 'A' || t === 'B' || t === 'C' ? 'Tier ' + t : 'No Tier';
+}
+function tierRowsFor(tier, rows){
+  const t = String(tier || '').toUpperCase();
+  return (rows || []).filter(r => {
+    const rt = String(r.companyTier || r.tier || '').toUpperCase();
+    if(t === 'NO_TIER') return !rt || rt === 'MISSING' || rt === 'NULL' || rt === 'NO TIER';
+    return rt === t;
+  });
+}
+function tierStatCard(tier, rows, keyPrefix){
+  const list = rows || [];
+  const noActivity = list.filter(r => num(r.daysSinceActivity) > 30 || num(r.rmDaysSinceTouch) > 30 || num(r.csmDaysSinceTouch) > 30);
+  const noMeeting = list.filter(r => num(r.daysSinceMeeting) > 90);
+  const key = keyPrefix + '_' + String(tier).replace(/\W+/g,'_');
+  window.__rows[key] = list;
+  return `<div class="tier-card" onclick="openRows('${esc(tierLabel(tier))} Accounts', window.__rows['${key}'], 'ops')">
+    <div class="topline"><h4>${esc(tierLabel(tier))}</h4><span class="pill ${tierClass(tier)}">${list.length}</span></div>
+    <div class="big">${list.length.toLocaleString()}</div>
+    <div class="meta"><span>${noActivity.length} no activity</span><span>${noMeeting.length} no meeting</span></div>
+  </div>`;
+}
+function renderTierDistribution(){
+  const rows = opRows('retentionAccounts');
+  $('tierDistributionBadge').textContent = rows.length + ' accounts';
+  $('tierDistributionCards').innerHTML = ['A','B','C','NO_TIER'].map(t => tierStatCard(t, tierRowsFor(t, rows), 'teamTier')).join('');
+}
+function smartActionRows(){
+  const rows = filteredAccounts();
+  const financial = [
+    ...metricRows('delayed', rows),
+    ...metricRows('remaining', rows),
+    ...metricRows('noaction', rows)
+  ];
+  const operational = [
+    ...opRows('tierFollowups'),
+    ...opRows('noActivity'),
+    ...opRows('noMeeting'),
+    ...opRows('delayedRenewals')
+  ];
+  return [...financial, ...operational].filter((row, idx, arr) => {
+    const key = [row.id,row.companyId,row.gid,row.clientName,row.companyName,row.name,row.status,row.alert,row.product].filter(Boolean).join('|');
+    return arr.findIndex(x => [x.id,x.companyId,x.gid,x.clientName,x.companyName,x.name,x.status,x.alert,x.product].filter(Boolean).join('|') === key) === idx;
+  });
+}
+function smartActionItem(title, sub, rows, colorClass, type, icon){
+  const key = 'smart_' + title.replace(/\W+/g,'_');
+  window.__rows[key] = rows || [];
+  return `<div class="project-item" onclick="openRows('${esc(title)}', window.__rows['${key}'], '${type || 'ops'}')">
+    <div class="project-ico ${colorClass}" style="background:var(--${colorClass}bg);color:var(--${colorClass})">${icon}</div>
+    <div><b>${esc(title)}</b><span>${esc(sub)}</span></div><span class="pill ${colorClass}">${(rows||[]).length}</span></div>`;
+}
+function renderSmartActions(){
+  const rows = filteredAccounts();
+  const delayedFinancial = metricRows('delayed', rows);
+  const pendingCollection = metricRows('remaining', rows);
+  const noAction = metricRows('noaction', rows);
+  const tier = opRows('tierFollowups');
+  const noAct = opRows('noActivity');
+  const noMeet = opRows('noMeeting');
+  $('smartActionsList').innerHTML = [
+    smartActionItem('Delayed Financial Accounts', money(sum(delayedFinancial,'renewalValue2026'))+' budget delayed', delayedFinancial, 'red', 'sheet', '!'),
+    smartActionItem('Booked Not Cash', money(sum(pendingCollection,'remainingCollection'))+' pending collection', pendingCollection, 'amber', 'sheet', '$'),
+    smartActionItem('No Action Yet', money(sum(noAction,'renewalValue2026'))+' untouched budget', noAction, 'blue', 'sheet', '•'),
+    smartActionItem('Tier Follow-ups Due', 'A/B/C cadence needs RM or CSM touch', tier, 'purple', 'ops', '●'),
+    smartActionItem('No Activity / No Meeting', `${noAct.length} no activity · ${noMeet.length} no meeting`, [...noAct, ...noMeet], 'teal', 'ops', '↺')
+  ].join('');
+}
+
+function repRows(){
+  const f=filters();
+  return (RAW?.ownerMatrix || RAW?.repData || []).filter(r =>
+    (!f.role || r.role === f.role) && (!f.owner || norm(r.name) === norm(f.owner)) && opSearchMatch(r, f.search)
+  );
+}
+function renderRepPerformance(){
+  const rows = repRows();
+  $('repPerfBadge').textContent = rows.length + ' reps';
+  window.__opOwnerRows = window.__opOwnerRows || {};
+  $('repPerformanceBody').innerHTML = rows.map(r => {
+    const d = ownerDetailByName(r.name);
+    const ownerRows = d ? [ ...(d.accounts||[]), ...(d.delayedRenewals||[]), ...(d.tierFollowups||[]) ] : [];
+    window.__opOwnerRows[r.name] = ownerRows;
+    return `<tr onclick="setOwnerTab('${esc(r.name)}')"><td><div class="owner-row"><div class="avatar" style="background:${esc(r.color || ownerColor(r.name,r.role))}">${esc(shortOwner(r.name)[0])}</div><div><b>${esc(shortOwner(r.name))}</b><span>${esc(r.name)}</span></div></div></td><td class="center"><span class="pill ${r.role==='RM'?'teal':'purple'}">${esc(r.role)}</span></td><td class="center">${num(r.accounts).toLocaleString()}</td><td class="center">${num(r.calls).toLocaleString()}</td><td class="center">${num(r.meetings).toLocaleString()}</td><td class="center"><span class="pill ${num(r.delayed)?'red':'green'}">${num(r.delayed)}</span></td><td class="center"><span class="pill ${num(r.tierFollowupDue)?'amber':'green'}">${num(r.tierFollowupDue)}</span></td></tr>`;
+  }).join('');
+}
+function renderTierSummary(){
+  const baseRows = RAW?.tierFollowup?.summary || [];
+  const all = opRows('tierFollowups');
+  const accountsRows = opRows('retentionAccounts');
+  const missingTierRows = tierRowsFor('NO_TIER', accountsRows);
+  const rows = [...baseRows];
+  if(!rows.some(r => String(r.tier || '').toUpperCase() === 'NO_TIER')){
+    rows.push({tier:'NO_TIER', accounts:missingTierRows.length, rmDue:0, csmDue:0, totalDue:missingTierRows.length, rmCadence:'Add tier', csmCadence:'Add tier'});
+  }
+  $('tierSummaryBadge').textContent = all.length + ' due · ' + missingTierRows.length + ' no tier';
+  $('tierSummaryBody').innerHTML = rows.map(r => {
+    const isNoTier = String(r.tier||'').toUpperCase() === 'NO_TIER';
+    const tierRows = isNoTier ? missingTierRows : all.filter(x => String(x.companyTier || '').toUpperCase() === String(r.tier||'').toUpperCase());
+    const key='tier_'+String(r.tier).replace(/\W+/g,'_'); window.__rows[key]=tierRows;
+    return `<tr onclick="openRows('${esc(isNoTier ? 'No Tier Accounts' : 'Tier '+r.tier+' Follow-ups')}', window.__rows['${key}'], 'ops')"><td><span class="pill ${tierClass(r.tier)}">${esc(isNoTier ? 'No Tier' : 'Tier '+r.tier)}</span></td><td class="center">${num(r.accounts)}</td><td class="center">${isNoTier ? '—' : num(r.rmDue)}</td><td class="center">${isNoTier ? '—' : num(r.csmDue)}</td><td class="center"><b>${isNoTier ? missingTierRows.length : num(r.totalDue)}</b></td><td>${esc(isNoTier ? 'Missing company_tier' : (r.rmCadence || '') + ' RM · ' + (r.csmCadence || '') + ' CSM')}</td></tr>`;
+  }).join('');
+}
+function renderRenewalPipelineOps(){
+  const rows = RAW?.monthlyRenewalPipeline || [];
+  const max = Math.max(1,...rows.map(r=>num(r.due)));
+  $('renewalPipelineList').innerHTML = rows.slice(0,12).map(r => {
+    const key='monthpipe_'+String(r.month).replace(/\W+/g,'_'); window.__rows[key]=r.rows||[];
+    return `<div class="month-row" onclick="openRows('${esc(r.month)} Renewal Pipeline', window.__rows['${key}'], 'ops')"><b>${esc(r.month)}</b><div><div class="line"><span style="width:${Math.max(5,num(r.due)/max*100)}%"></span></div><small>${num(r.renewed)} renewed · ${num(r.delayed)} delayed · ${num(r.upcoming)} upcoming</small></div><span class="pill ${num(r.delayed)?'red':'green'}">${num(r.due)} due</span></div>`;
+  }).join('');
+}
+function renderDelayedOps(){
+  const delayed = opRows('delayedRenewals').sort((a,b)=>num(b.daysOverdue)-num(a.daysOverdue));
+  $('delayedOpsBadge').textContent = delayed.length + ' · ' + money(delayed.reduce((a,r)=>a+opValue(r),0));
+  $('delayedOpsList').innerHTML = opsSmallRows(delayed,'daysOverdue',8);
+}
+function opsSmallRows(rows, metricKey, limit=7){
+  if(!rows || !rows.length) return `<div class="muted" style="padding:18px">No rows found.</div>`;
+  return rows.slice(0,limit).map((r,i) => {
+    const key='opsrow_'+metricKey+'_'+i+'_'+String(r.companyId||r.id||r.companyName||r.clientName).replace(/\W+/g,'_'); window.__rows[key]=[r];
+    const name=r.companyName||r.clientName||r.name||'Unnamed';
+    const owner=r.ownerName||r.rmOwnerName||r.csmOwnerName||r.rm||r.csm||'';
+    const metric=metricKey==='daysOverdue'?`${num(r.daysOverdue)}d`:metricKey==='daysSinceActivity'?`${num(r.daysSinceActivity)}d`:metricKey==='daysSinceMeeting'?`${num(r.daysSinceMeeting)}d`:money(opValue(r));
+    return `<div class="small-row" onclick="openRows('${esc(name)}', window.__rows['${key}'], 'ops')"><div><b>${esc(name)}</b><span>${esc([r.status||r.alert||r.tierLabel, owner].filter(Boolean).join(' · '))}</span></div><b>${esc(metric)}</b></div>`;
+  }).join('');
+}
+function renderAccountHealthLedger(){
+  const rows = opRows('retentionAccounts');
+  $('accountHealthBadge').textContent = rows.length + ' accounts';
+  $('accountHealthBody').innerHTML = rows.slice(0,180).map((r,i) => {
+    const key='health_'+i+'_'+String(r.companyId||r.companyName).replace(/\W+/g,'_'); window.__rows[key]=[r];
+    return `<tr onclick="openRows('${esc(r.companyName||'Account')}', window.__rows['${key}'], 'ops')"><td><b>${esc(r.companyName || 'Unnamed')}</b><br><span class="muted">${esc(r.companyId || '')}</span></td><td>${esc(shortOwner(r.rmOwnerName)||'—')}</td><td>${esc(shortOwner(r.csmOwnerName)||'—')}</td><td class="center"><span class="pill ${r.companyTier==='A'?'red':r.companyTier==='B'?'amber':r.companyTier==='C'?'green':'teal'}">${esc(r.companyTier ? 'Tier '+r.companyTier : 'Missing')}</span></td><td class="center">${esc(r.accountStatus || '—')}</td><td class="center">${esc(r.lastActivityDate || '—')}</td><td class="center">${esc(r.lastMeetingDate || '—')}</td><td class="center">${num(r.dealsCount)}</td></tr>`;
+  }).join('');
+}
+function renderOperationalDashboard(){
+  renderOverviewStats();
+  renderActivityKpis();
+  renderCoverageHealth();
+  renderOperationalActions();
+  renderRepPerformance();
+  renderTierSummary();
+  renderTierDistribution();
+  renderSmartActions();
+  renderRenewalPipelineOps();
+  renderDelayedOps();
+  renderAccountHealthLedger();
+}
+function renderOwnerOperational(owner){
+  const id=safeId(owner);
+  const d=ownerDetailByName(owner);
+  if(!d){return;}
+  const m=d.metrics || {};
+  const opItems = [
+    {t:'Accounts',v:num(m.accounts),rows:d.accounts||[],c:'green'},
+    {t:'Calls',v:num(m.calls),rows:d.calls||[],c:'blue'},
+    {t:'Meetings',v:num(m.meetings),rows:d.meetings||[],c:'purple'},
+    {t:'Tier Due',v:num(m.tierFollowupDue),rows:d.tierFollowups||[],c:'amber'},
+    {t:'Delayed',v:num(m.delayed),rows:d.delayedRenewals||[],c:'red'}
+  ];
+  $('ownerOpsStats-'+id).innerHTML = opItems.map((x,i)=>{const key='ownerop_'+id+'_'+i; window.__rows[key]=x.rows; return `<div class="owner-mini" onclick="openRows('${esc(shortOwner(owner))} ${esc(x.t)}', window.__rows['${key}'], 'ops')"><b>${esc(x.v.toLocaleString())}</b><span>${esc(x.t)}</span></div>`}).join('');
+  const ops = [...(d.tierFollowups||[]), ...(d.delayedRenewals||[]), ...(d.noContactAccounts||[]), ...(d.noMeetingAccounts||[])];
+  $('ownerOpsBadge-'+id).textContent = ops.length;
+  $('ownerOpsList-'+id).innerHTML = opsSmallRows(ops,'daysSinceActivity',8);
+  const health = d.accounts || [];
+  $('ownerHealthBadge-'+id).textContent = health.length;
+  $('ownerHealth-'+id).innerHTML = opsSmallRows(health,'daysSinceActivity',8);
+}
+
+function renderOwnerTierBreakdown(owner){
+  const id = safeId(owner);
+  const d = ownerDetailByName(owner);
+  const rows = d?.accounts || [];
+  const target = $('ownerTierMix-' + id);
+  if(!target) return;
+  target.innerHTML = ['A','B','C','NO_TIER'].map(t => tierStatCard(t, tierRowsFor(t, rows), 'ownerTier_' + id)).join('');
+}
+
+function renderFinancialStats(targetId, rows){
+  const st = rowsStats(rows);
+  window.__rows = window.__rows || {};
+  Object.assign(window.__rows, {
+    budget: metricRows('budget', rows), booking: metricRows('booking', rows), cash: metricRows('cash', rows), remaining: metricRows('remaining', rows),
+    delayed: metricRows('delayed', rows), upcoming: metricRows('upcoming', rows), late: metricRows('late', rows), noaction: metricRows('noaction', rows)
+  });
+  $(targetId).innerHTML = [
+    statCard('Budget Value', money(st.budget), 'renewal value', window.__rows.budget, 'budget', true, 'green'),
+    statCard('Booking Sheet', money(st.booking), 'booked from sheet', window.__rows.booking, 'booking', false, 'amber'),
+    statCard('Cash Collected', money(st.cash), 'collection sheet', window.__rows.cash, 'cash', false, 'blue'),
+    statCard('Booked Not Cash', money(st.remaining), 'remaining collection', window.__rows.remaining, 'remaining', false, 'red')
+  ].join('');
+}
+
 function render(){
   if(!RAW) return;
   window.__rowByKey = {};
   accounts().forEach(r => window.__rowByKey[rowKey(r)] = r);
   const rows = filteredAccounts();
   $('budgetCount').textContent = metricRows('budget').length;
-  renderStats('mainStats', rows);
-  renderStats('financialStats', rows);
+  renderOperationalDashboard();
+  renderFinancialStats('teamFinancialStats', rows);
+  renderFinancialStats('financialStats', rows);
   renderMonthly(rows);
   renderActions(rows);
   renderOwnerSummary();
@@ -983,9 +1421,20 @@ function render(){
 function openRows(title, rows, type='sheet'){
   rows = Array.isArray(rows) ? rows.filter(Boolean) : [];
   $('modalTitle').textContent = `${title} (${rows.length.toLocaleString()})`;
-  $('modalSub').textContent = 'Showing every matching row after current filters.';
+  $('modalSub').textContent = type === 'ops' ? 'Showing every matching operational row after current filters.' : 'Showing every matching financial row after current filters.';
   if(!rows.length){
     $('modalBody').innerHTML = `<div style="padding:30px" class="muted">No rows found.</div>`;
+  } else if(type === 'ops'){
+    $('modalBody').innerHTML = `<div class="modal-grid head"><div>Account / Deal</div><div>Owners</div><div>Status / Tier</div><div>Activity / Dates</div><div>Product</div><div>Values</div></div>` +
+      rows.map(r => {
+        const name = r.companyName || r.clientName || r.name || r.dealName || 'Unnamed';
+        const link = r.companyUrl || r.hubspotUrl || r.renewedDealUrl || '';
+        const ownerText = [r.ownerName&&'Owner: '+r.ownerName, r.rmOwnerName&&'RM: '+r.rmOwnerName, r.csmOwnerName&&'CSM: '+r.csmOwnerName, r.role&&'Role: '+r.role].filter(Boolean).join('<br>') || '—';
+        const status = r.status || r.alert || r.accountStatus || r.stageType || r.financialStatus || '—';
+        const tier = r.tierLabel || (r.companyTier ? 'Tier '+r.companyTier : '');
+        const dates = [r.lastActivityDate&&'Last activity '+r.lastActivityDate, r.lastMeetingDate&&'Meeting '+r.lastMeetingDate, r.contractRenewalDate&&'Renewal '+r.contractRenewalDate, r.actionDate&&'Action '+r.actionDate, r.daysOverdue&&('Overdue '+r.daysOverdue+'d'), r.daysSinceActivity&&('No activity '+r.daysSinceActivity+'d')].filter(Boolean).join('<br>') || '—';
+        return `<div class="modal-grid"><div><b>${link?`<a href="${esc(link)}" target="_blank">${esc(name)} ↗</a>`:esc(name)}</b><br><span class="muted">${esc(r.companyId || r.id || '')}</span></div><div>${ownerText}</div><div><span class="pill ${badgeClass(r)}">${esc(status)}</span><br><span class="muted">${esc(tier)}</span></div><div>${dates}</div><div>${esc(r.product || r.accountType || '—')}<br><span class="muted">${esc(r.location || '')}</span></div><div class="num">Amount ${money(r.amount || r.renewalValue || 0)}<br>Deals ${num(r.dealsCount || 0)}<br>Calls ${num(r.calls || 0)} · Meetings ${num(r.meetings || 0)}</div></div>`;
+      }).join('');
   } else {
     $('modalBody').innerHTML = `<div class="modal-grid head"><div>Account</div><div>Owners</div><div>Status</div><div>Months</div><div>Product</div><div>Values</div></div>` +
       rows.map(r => `<div class="modal-grid">
