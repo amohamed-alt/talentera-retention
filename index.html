@@ -45,21 +45,23 @@ body{
     radial-gradient(circle at 90% 0%,rgba(14,116,144,.08),transparent 30%),
     linear-gradient(135deg,#f6f8f7,#eef5f1);
   -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
 }
 button,input,select{font-family:inherit}
 button{cursor:pointer}
 a{color:inherit;text-decoration:none}
 .shell{
-  width:min(1720px,calc(100vw - 52px));
-  margin:40px auto;
-  min-height:calc(100vh - 80px);
+  width:100vw;
+  max-width:none;
+  margin:0;
+  min-height:100vh;
   background:rgba(255,255,255,.78);
-  border:1px solid rgba(255,255,255,.8);
-  box-shadow:0 24px 70px rgba(15,23,42,.11);
-  border-radius:34px;
+  border:0;
+  box-shadow:none;
+  border-radius:0;
   overflow:hidden;
   display:grid;
-  grid-template-columns:var(--side) 1fr;
+  grid-template-columns:var(--side) minmax(0,1fr);
   backdrop-filter:blur(18px);
 }
 .sidebar{
@@ -68,8 +70,9 @@ a{color:inherit;text-decoration:none}
   padding:28px 22px;
   display:flex;
   flex-direction:column;
-  min-height:calc(100vh - 80px);
+  min-height:100vh;
 }
+
 .brand{display:flex;align-items:center;gap:14px;margin-bottom:34px}
 .logo{
   width:44px;height:44px;border-radius:16px;background:linear-gradient(135deg,var(--green),#17a466);
@@ -526,18 +529,6 @@ a{color:inherit;text-decoration:none}
           <div class="card compact-card">
             <div class="card-head"><div><div class="card-title">Smart Actions</div><div class="card-sub">Financial + operational actions in one manager queue.</div></div><button class="pill red" onclick="openRows('Smart Action Queue', smartActionRows(), 'ops')">Open all</button></div>
             <div class="smart-action-list" id="smartActionsList"></div>
-          </div>
-        </div>
-
-        <div class="section-gap"></div>
-        <div class="grid2">
-          <div class="card compact-card">
-            <div class="card-head"><div><div class="card-title">Owner Focus</div><div class="card-sub">Top RM / CSM by delayed value and booked-not-cash risk</div></div><span class="pill teal">Filtered</span></div>
-            <div class="small-list" id="collabList"></div>
-          </div>
-          <div class="card compact-card">
-            <div class="card-head"><div><div class="card-title">Financial Risk Summary</div><div class="card-sub">Auto summary from delayed and pending collection rows</div></div><button class="pill amber" onclick="setTab('financial')">Financial</button></div>
-            <div style="padding:6px 0 10px"><h3 id="riskTitle" style="font-size:22px;font-weight:950;letter-spacing:-.03em">—</h3><p id="riskText" class="muted" style="margin-top:8px;font-size:13px;font-weight:700;line-height:1.5">—</p></div>
           </div>
         </div>
 
