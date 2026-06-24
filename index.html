@@ -56,6 +56,32 @@
         });
       }
 
+      function appendStylesheet(doc, id, href) {
+        if (doc.getElementById(id)) return;
+        const link = doc.createElement('link');
+        link.id = id;
+        link.rel = 'stylesheet';
+        link.href = href;
+        doc.head.appendChild(link);
+      }
+
+      function appendScript(doc, id, src) {
+        return new Promise((resolve, reject) => {
+          const existing = doc.getElementById(id);
+          if (existing) {
+            resolve();
+            return;
+          }
+          const script = doc.createElement('script');
+          script.id = id;
+          script.src = src;
+          script.async = false;
+          script.onload = resolve;
+          script.onerror = reject;
+          doc.body.appendChild(script);
+        });
+      }
+
       function enhance() {
         try {
           const doc = frame.contentDocument;
@@ -65,14 +91,8 @@
           doc.body.classList.add('huddle-retention-body');
           doc.title = 'Talentera Huddle · Retention Command Center';
 
-          if (!doc.getElementById('huddle-retention-theme')) {
-            const theme = doc.createElement('link');
-            theme.id = 'huddle-retention-theme';
-            theme.rel = 'stylesheet';
-            theme.href = './huddle-retention-theme.css?v=20260624-3';
-            doc.head.appendChild(theme);
-          }
-
+          appendStylesheet(doc, 'huddle-retention-theme', './huddle-retention-theme.css?v=20260624-3');
+          appendStylesheet(doc, 'retention-policy-style', './retention-policy.css?v=20260624-1');
           balanceDashboardLayout(doc);
 
           const brand = doc.querySelector('.brand');
@@ -82,7 +102,11 @@
           }
 
           const live = doc.querySelector('.live');
-          if (live) live.innerHTML = '<i></i> Live · Sheets';
+          if (live) live.innerHTML = '<i></i> Live · Sheets + HubSpot';
+
+          appendScript(doc, 'retention-policy-core', './retention-policy-core.js?v=20260624-1')
+            .then(() => appendScript(doc, 'retention-policy-ui', './retention-policy-ui.js?v=20260624-1'))
+            .catch(error => console.error('Retention source policy failed to load:', error));
 
           const top = doc.querySelector('.top');
           const sidebar = doc.querySelector('.sidebar');
