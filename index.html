@@ -21,6 +21,41 @@
       const frame = document.getElementById('dashboard');
       const logo = 'https://talimg1.b8cdn.com/wp-content/themes/talentera-2018/images/new-design/Talentera-ATS-white-logo.svg';
 
+      function balanceDashboardLayout(doc) {
+        const panel = doc.querySelector('#panel-dashboard');
+        if (!panel || panel.querySelector('.dashboard-balanced-flow')) return;
+
+        const directChildren = Array.from(panel.children);
+        const tierGrid = directChildren.find(element => element.matches('.grid2') && element.querySelector('#tierDistributionCards'));
+        const renewalGrid = directChildren.find(element => element.matches('.grid2') && element.querySelector('#renewalPipelineList'));
+        if (!tierGrid || !renewalGrid) return;
+
+        const tierCard = tierGrid.children[0];
+        const smartActionsCard = tierGrid.children[1];
+        const renewalCard = renewalGrid.children[0];
+        const delayedCard = renewalGrid.children[1];
+        if (!tierCard || !smartActionsCard || !renewalCard || !delayedCard) return;
+
+        const layout = doc.createElement('div');
+        layout.className = 'dashboard-balanced-flow';
+
+        const leftColumn = doc.createElement('div');
+        leftColumn.className = 'dashboard-balanced-column';
+        leftColumn.append(tierCard, renewalCard);
+
+        const rightColumn = doc.createElement('div');
+        rightColumn.className = 'dashboard-balanced-column';
+        rightColumn.append(smartActionsCard, delayedCard);
+
+        layout.append(leftColumn, rightColumn);
+        tierGrid.replaceWith(layout);
+        renewalGrid.remove();
+
+        Array.from(panel.querySelectorAll(':scope > .section-gap')).forEach(gap => {
+          if (gap.nextElementSibling?.classList.contains('section-gap')) gap.remove();
+        });
+      }
+
       function enhance() {
         try {
           const doc = frame.contentDocument;
@@ -34,9 +69,11 @@
             const theme = doc.createElement('link');
             theme.id = 'huddle-retention-theme';
             theme.rel = 'stylesheet';
-            theme.href = './huddle-retention-theme.css?v=20260624-2';
+            theme.href = './huddle-retention-theme.css?v=20260624-3';
             doc.head.appendChild(theme);
           }
+
+          balanceDashboardLayout(doc);
 
           const brand = doc.querySelector('.brand');
           if (brand && brand.dataset.huddleEnhanced !== '1') {
